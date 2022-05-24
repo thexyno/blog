@@ -1,0 +1,30 @@
+{% interface
+Page {
+     Title()
+     Body()
+}
+%}
+
+
+{% func PageTemplate(p Page) %}
+<html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="/css/output.css" rel="stylesheet">
+      <title>{%= p.Title() %}</title>
+    </head>
+    <body>
+      <div class="top-0 z-40 w-full backdrop-blur flex-none>
+        <div class="max-w-8xl mx-auto">
+          <div class="py-4 lg:px-8 mx-4 lg:mx-0">
+            <div class="relative flex items-center">
+              <a class="mr-3 flex-none overflow-hidden md:w-auto" href="/">xynos space</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {%= p.Body() %}
+    </body>
+</html>
+{% endfunc %}

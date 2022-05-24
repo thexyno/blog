@@ -1,0 +1,5 @@
+.direnv
+.DS_Store
+.log
+cssdist
+blog.db

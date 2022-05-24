@@ -1,0 +1,23 @@
+{% import (
+   "github.com/thexyno/xynoblog/db"
+   )
+%}
+
+{% code
+type PostPage struct {
+    Post db.Post
+    RenderedContent []byte
+}
+%}
+
+{% func (p *PostPage) Title() %}
+	{%s p.Post.Title %} - Xynos Space
+{% endfunc %}
+
+
+{% func (p *PostPage) Body() %}
+	<div class="mx-auto container">
+	<h1 class="px-8 py-8">{%s p.Post.Title %}</h1>
+	{%z= p.RenderedContent %}
+	</div>
+{% endfunc %}

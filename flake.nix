@@ -2,7 +2,7 @@
   description = "A simple Go package";
 
   # Nixpkgs / NixOS version to use.
-  inputs.nixpkgs.url = "nixpkgs/nixos-21.11";
+  inputs.nixpkgs.url = "nixpkgs/nixos-unstable"; # Tailwind isn't in 21.11
 
   outputs = { self, nixpkgs }:
     let
@@ -31,12 +31,15 @@
           pkgs = nixpkgsFor.${system};
         in
         {
-          go-hello = pkgs.buildGoModule {
-            pname = "go-hello";
+          xynoblog = pkgs.buildGoModule {
+            pname = "xynoblog";
             inherit version;
             # In 'nix develop', we don't need a copy of the source tree
             # in the Nix store.
             src = ./.;
+            postBuild = ''
+              ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/*.css -o $out/cssdist/output.css --minify
+            '';
 
             # This hash locks the dependencies of this package. It is
             # necessary because of how Go requires network access to resolve
@@ -48,14 +51,14 @@
             # remeber to bump this hash when your dependencies change.
             #vendorSha256 = pkgs.lib.fakeSha256;
 
-            vendorSha256 = "sha256-pQpattmS9VmO3ZIQUFn66az8GSmB4IvYhTTCFn6SUmo=";
+            vendorSha256 = "sha256-LF9FuGw45VZUDZApe54m/a37cgFiFuA3DhFbYWh1ZXo=";
           };
         });
 
       # The default package for 'nix build'. This makes sense if the
       # flake provides only one package or there is a clear "main"
       # package.
-      defaultPackage = forAllSystems (system: self.packages.${system}.go-hello);
-      devShell = forAllSystems (system: let pkgs = nixpkgsFor.${system}; in (pkgs.mkShell  { buildInputs = [ pkgs.gopls pkgs.go ];}));
+      defaultPackage = forAllSystems (system: self.packages.${system}.xynoblog);
+      devShell = forAllSystems (system: let pkgs = nixpkgsFor.${system}; in (pkgs.mkShell  { buildInputs = [ pkgs.gopls pkgs.go pkgs.nodePackages.tailwindcss ];}));
     };
 }

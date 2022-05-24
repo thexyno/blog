@@ -1,0 +1,37 @@
+{% import (
+   "github.com/thexyno/xynoblog/db"
+   )
+%}
+
+{% code
+type IndexPage struct {
+    Posts []db.Post
+}
+%}
+
+
+{% func (p *IndexPage) Title() %}
+	This is the main page
+{% endfunc %}
+
+
+{% func (p *IndexPage) Body() %}
+	<div class="mx-auto container">
+	<h1 class="px-8 py-8 text-2xl font-semibold">Posts:</h1>
+    {% if len(p.Posts) == 0 %}
+		No posts.
+	{% else %}
+			{%= emitPosts(p.Posts) %}
+	{% endif %}
+	</div>
+{% endfunc %}
+
+{% func emitPosts(posts []db.Post) %}
+   {% for _,v := range posts %}
+   <div class="">
+    <h3 class="font-semibold text-lg">{%s v.Title %}</h3>
+    <div class="text-black">{%s v.Content %}</div>
+    <p class="text-xs font-thin text-slate-500">Released On: {%s v.Created.Format("2006-01-02T15:04:05Z07:00") %}</p>
+    </div>
+    {% endfor %}
+{% endfunc %}
