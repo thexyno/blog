@@ -72,43 +72,55 @@ func (p *PostPage) StreamBody(qw422016 *qt422016.Writer) {
 //line templates/post.qtpl:18
 	qw422016.N().S(`
 	<div class="mx-auto container">
-	<h1 class="px-8 py-8">`)
-//line templates/post.qtpl:20
+    <div class="pt-8 py-8">
+    	<h1 class="p-0">`)
+//line templates/post.qtpl:21
 	qw422016.E().S(p.Post.Title)
-//line templates/post.qtpl:20
+//line templates/post.qtpl:21
 	qw422016.N().S(`</h1>
+        <p class="pl-2 text-xs font-thin text-dark3 dark:text-light3 ">Released On: `)
+//line templates/post.qtpl:22
+	qw422016.E().S(p.Post.Created.Format("2006-01-02 15:04Z07:00"))
+//line templates/post.qtpl:22
+	qw422016.N().S(`</p>
+        <p class="pl-2 text-xs font-thin text-dark3 dark:text-light3 ">A `)
+//line templates/post.qtpl:23
+	qw422016.N().FPrec(p.Post.TimeToRead.Minutes(), 0)
+//line templates/post.qtpl:23
+	qw422016.N().S(` minute read.</p>
+    </div>
 	`)
-//line templates/post.qtpl:21
+//line templates/post.qtpl:25
 	qw422016.N().Z(p.RenderedContent)
-//line templates/post.qtpl:21
+//line templates/post.qtpl:25
 	qw422016.N().S(`
 	</div>
 `)
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 }
 
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 func (p *PostPage) WriteBody(qq422016 qtio422016.Writer) {
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 	p.StreamBody(qw422016)
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 	qt422016.ReleaseWriter(qw422016)
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 }
 
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 func (p *PostPage) Body() string {
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 	qb422016 := qt422016.AcquireByteBuffer()
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 	p.WriteBody(qb422016)
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 	qs422016 := string(qb422016.B)
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 	qt422016.ReleaseByteBuffer(qb422016)
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 	return qs422016
-//line templates/post.qtpl:23
+//line templates/post.qtpl:27
 }

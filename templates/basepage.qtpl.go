@@ -54,7 +54,7 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
         <div class="max-w-8xl mx-auto">
           <div class="py-4 lg:px-8 mx-4 lg:mx-0">
             <div class="relative flex items-center">
-              <a class="mr-3 flex-none overflow-hidden md:w-auto" href="/">xynos space</a>
+              <a class="mr-3 text-2xl flex-none text-neutral_orange hover:font-bold font-semibold overflow-hidden md:w-auto" href="/">xynos space</a>
             </div>
           </div>
         </div>

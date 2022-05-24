@@ -17,21 +17,22 @@ type IndexPage struct {
 
 {% func (p *IndexPage) Body() %}
 	<div class="mx-auto container">
-	<h1 class="px-8 py-8 text-2xl font-semibold">Posts:</h1>
-    {% if len(p.Posts) == 0 %}
-		No posts.
-	{% else %}
-			{%= emitPosts(p.Posts) %}
-	{% endif %}
+	<h1 class="py-8 text-2xl font-semibold">Posts:</h1>
+      <div class="px-8 flex flex-col">
+      {% if len(p.Posts) == 0 %}
+	  	No posts.
+	  {% else %}
+	  		{%= emitPosts(p.Posts) %}
+	  {% endif %}
+	  </div>
 	</div>
 {% endfunc %}
 
 {% func emitPosts(posts []db.Post) %}
    {% for _,v := range posts %}
-   <div class="">
-    <h3 class="font-semibold text-lg">{%s v.Title %}</h3>
-    <div class="text-black">{%s v.Content %}</div>
-    <p class="text-xs font-thin text-slate-500">Released On: {%s v.Created.Format("2006-01-02T15:04:05Z07:00") %}</p>
-    </div>
-    {% endfor %}
+     <a href="/post/{%s v.Id %}">
+      <span class="font-semibold text-lg">{%s v.Title %}</span>
+      <span class="text-xs font-thin text-dark3 dark:text-light3 ">({%s v.Created.Format("2006-01-02") %})</span>
+     </a>
+   {% endfor %}
 {% endfunc %}

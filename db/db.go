@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"log"
+	"math"
+	"regexp"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -20,10 +22,11 @@ type Post struct {
 	Created time.Time
 	Updated time.Time
 	Tags    []string
+	TimeToRead time.Duration
 }
 
 const (
-	shortPostStmt string = "select id, title, substr(content,0,100), created, updated, tags from posts limit ? offset ?"
+	shortPostStmt string = "select id, title, created, updated, tags from posts limit ? offset ?"
 	postStmt      string = "select id, title, content, created, updated, tags from posts where id = ?"
 )
 
@@ -67,6 +70,15 @@ func (conn *DbConn) Add(post Post) error {
 	return err
 }
 
+func wordCount(value string) int {
+    // Match non-space character sequences.
+    re := regexp.MustCompile(`[\S]+`)
+
+    // Find all matches and return count.
+    results := re.FindAllString(value, -1)
+    return len(results)
+}
+
 /// returns post  with id = id
 func (conn *DbConn) Post(id string) (Post, error) {
 	rows, err := conn.db.Query(postStmt, id)
@@ -93,12 +105,13 @@ func (conn *DbConn) Post(id string) (Post, error) {
 			log.Print("Post tags Error: ", tagsErr)
 			return Post{}, err
 		}
-		post = Post{id, title, content, created, updated, tags}
+		duration := time.Duration(math.Ceil(float64(wordCount(content))/239.0) * 60000000000)
+		post = Post{id, title, content, created, updated, tags, duration}
 	}
 	return post, nil
 }
 
-/// returns posts with only 100 chars of post text
+/// returns posts with only 0 chars of post text and no duration
 func (conn *DbConn) ShortPosts(limit uint, skip uint) ([]Post, error) {
 	rows, err := conn.db.Query(string(shortPostStmt), limit, skip)
 	if err != nil {
@@ -109,11 +122,10 @@ func (conn *DbConn) ShortPosts(limit uint, skip uint) ([]Post, error) {
 	for rows.Next() {
 		var id string
 		var title string
-		var content string
 		var created time.Time
 		var updated time.Time
 		var tmpTags string
-		rowErr := rows.Scan(&id, &title, &content, &created, &updated, &tmpTags)
+		rowErr := rows.Scan(&id, &title,&created, &updated, &tmpTags)
 		if rowErr != nil {
 			log.Print("ShortPosts row Error: ", rowErr)
 		}
@@ -122,7 +134,7 @@ func (conn *DbConn) ShortPosts(limit uint, skip uint) ([]Post, error) {
 		if tagsErr != nil {
 			log.Print("ShortPosts tags Error: ", tagsErr)
 		}
-		posts = append(posts, Post{id, title, content, created, updated, tags})
+		posts = append(posts, Post{id, title, "", created, updated, tags, time.Duration(0)})
 	}
 	return posts, nil
 }
