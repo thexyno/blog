@@ -37,7 +37,7 @@ func renderError(w http.ResponseWriter, r *http.Request, err string) {
 
 func renderIndex(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		posts, err := db.ShortPosts(10, 0)
+		posts, err := db.ShortPosts(5, 0)
 		if err != nil {
 			renderError(w, r, err.Error())
 			return

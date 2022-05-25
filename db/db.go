@@ -26,7 +26,7 @@ type Post struct {
 }
 
 const (
-	shortPostStmt string = "select id, title, created, updated, tags from posts limit ? offset ?"
+	shortPostStmt string = "select id, title, created, updated, tags from posts order by created desc limit ? offset ?"
 	postStmt      string = "select id, title, content, created, updated, tags from posts where id = ?"
 )
 
@@ -51,9 +51,9 @@ create table if not exists posts (id text primary key not null, title text not n
 		return err
 	}
 	err = conn.Add(Post{
-		Id:      "i-like-bread2",
-		Title:   "I like Bread",
-		Content: "# Bread is life\n## Bread is Love\n\nBread will consume us all\n\n- That's a very enby thing to say",
+		Id:      "i-like-lorem-ipsum",
+		Title:   "I like lorem ipsum",
+		Content: "Lorem ipsum dolor sit amet",
 		Created: time.Now(),
 		Updated: time.Now(),
 		Tags:    []string{"bread", "enby"},

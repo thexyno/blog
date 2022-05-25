@@ -71,9 +71,9 @@ func (p *PostPage) Title() string {
 func (p *PostPage) StreamBody(qw422016 *qt422016.Writer) {
 //line templates/post.qtpl:18
 	qw422016.N().S(`
-	<div class="mx-auto container">
-    <div class="pt-8 py-8">
-    	<h1 class="p-0">`)
+	<article class="mx-auto container">
+      <div class="pt-8 py-8">
+      	<h1 class="p-0">`)
 //line templates/post.qtpl:21
 	qw422016.E().S(p.Post.Title)
 //line templates/post.qtpl:21
@@ -88,13 +88,13 @@ func (p *PostPage) StreamBody(qw422016 *qt422016.Writer) {
 	qw422016.N().FPrec(p.Post.TimeToRead.Minutes(), 0)
 //line templates/post.qtpl:23
 	qw422016.N().S(` minute read.</p>
-    </div>
-	`)
+      </div>
+	  `)
 //line templates/post.qtpl:25
 	qw422016.N().Z(p.RenderedContent)
 //line templates/post.qtpl:25
 	qw422016.N().S(`
-	</div>
+	</article>
 `)
 //line templates/post.qtpl:27
 }

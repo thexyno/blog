@@ -16,8 +16,7 @@
         @apply py-1 font-semibold text-lg
     }
     li {
-        @apply py-2 before:content-['-_'] mx-2 py-4
-
+        @apply before:content-['-_'] mx-2
     }
 
 }

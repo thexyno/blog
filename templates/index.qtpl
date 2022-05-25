@@ -11,13 +11,40 @@ type IndexPage struct {
 
 
 {% func (p *IndexPage) Title() %}
-	This is the main page
+	xynos space
 {% endfunc %}
 
 
 {% func (p *IndexPage) Body() %}
 	<div class="mx-auto container">
-	<h1 class="py-8 text-2xl font-semibold">Posts:</h1>
+    <h1 class="pt-8 text-2xl font-bold">xyno</h1>
+    <h3 class="px-4 text-xl text-dark1 dark:text-light1">Full Stack Engineer</h3>
+    <h3 class="text-xl">Skills:</h3>
+    <div class="px-8">
+      <ul>
+        <li>Go</li>
+        <li>Typescript/Javascript</li>
+      </ul>
+      <ul class="px-4">
+        <li>Angular</li>
+        <li>Nest.JS</li>
+      </ul>
+      <ul>
+        <li>Kubernetes</li>
+        <li>Terraform</li>
+        <li>Nix/NixOS</li>
+        <li>GitLab CI</li>
+      </ul>
+    </div>
+	<h3 class="pt-4 text-xl font-semibold">Links:</h3>
+      <div class="px-8">
+      <ul>
+        <li><a target="_blank" href="https://github.com/thexyno">GitHub - thexyno</a></li>
+        <li><a rel="me" target="_blank" href="https://matrix.to/#/@me:ragon.xyz">Matrix - @me:ragon.xyz</a></li>
+        <li><a rel="me" target="_blank" href="https://chaos.social/@xyno">Mastodon - @xyno@chaos.social</a></li>
+      </ul>
+	  </div>
+	<h3 class="pt-4 text-xl font-semibold">Latest Posts:</h3>
       <div class="px-8 flex flex-col">
       {% if len(p.Posts) == 0 %}
 	  	No posts.
@@ -31,7 +58,7 @@ type IndexPage struct {
 {% func emitPosts(posts []db.Post) %}
    {% for _,v := range posts %}
      <a href="/post/{%s v.Id %}">
-      <span class="font-semibold text-lg">{%s v.Title %}</span>
+      <span>{%s v.Title %}</span>
       <span class="text-xs font-thin text-dark3 dark:text-light3 ">({%s v.Created.Format("2006-01-02") %})</span>
      </a>
    {% endfor %}
