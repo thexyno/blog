@@ -39,9 +39,9 @@ type Page interface {
 //line templates/basepage.qtpl:7
 }
 
-//line templates/basepage.qtpl:14
+//line templates/basepage.qtpl:13
 func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
-//line templates/basepage.qtpl:14
+//line templates/basepage.qtpl:13
 	qw422016.N().S(`
 <!doctype html>
 <html>
@@ -50,17 +50,18 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link href="/css/output.css" rel="stylesheet">
       <title>`)
-//line templates/basepage.qtpl:21
+//line templates/basepage.qtpl:20
 	p.StreamTitle(qw422016)
-//line templates/basepage.qtpl:21
+//line templates/basepage.qtpl:20
 	qw422016.N().S(`</title>
     </head>
     <body>
       <div class="top-0 z-40 w-full backdrop-blur flex-none">
         <div class="max-w-8xl mx-auto">
-          <div class="py-4 lg:px-8 mx-4 lg:mx-0">
+          <div class="py-4 lg:px-8 mx-8">
             <div class="relative flex items-center">
-              <a class="mr-3 text-2xl flex-none text-neutral_orange hover:font-bold font-semibold overflow-hidden md:w-auto" href="/">xynos space</a>
+              <a class="pr-8 mr-3 text-2xl flex-none text-neutral_orange visited:text-neutral_orange hover:text-bright_orange font-semibold overflow-hidden md:w-auto" href="/">xynos space</a>
+              <a class="mr-3 text-xl flex-none font-semibold overflow-hidden md:w-auto" href="/posts">Blog</a>
             </div>
           </div>
         </div>

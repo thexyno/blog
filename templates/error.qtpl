@@ -1,0 +1,17 @@
+{% code
+type ErrorPage struct {
+    Message string
+}
+%}
+
+{% func (p *ErrorPage) Title() %}
+	Error - Xynos Space
+{% endfunc %}
+
+
+{% func (p *ErrorPage) Body() %}
+      <div class="flex flex-col justify-center items-center content-center">
+      	<h1>{%s p.Message %}</h1>
+      	<a href="/">Click Here to get back to the main page</a>
+      </div>
+{% endfunc %}

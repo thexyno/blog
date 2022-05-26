@@ -66,8 +66,8 @@ func (p *IndexPage) Title() string {
 func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
 //line templates/index.qtpl:18
 	qw422016.N().S(`
-	<div class="mx-auto container">
-    <h1 class="pt-8 text-2xl font-bold">xyno</h1>
+	<div class="mx-auto container max-w-6xl">
+    <h1 class="pt-8 font-bold">xyno</h1>
     <h3 class="px-4 text-xl text-dark1 dark:text-light1">Full Stack Engineer</h3>
     <h3 class="text-xl">Skills:</h3>
     <div class="px-8">

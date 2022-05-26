@@ -3,12 +3,13 @@ package db
 import (
 	"database/sql"
 	"encoding/json"
-	"log"
+	"errors"
 	"math"
 	"regexp"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
+	log "github.com/sirupsen/logrus"
 )
 
 type DbConn struct {
@@ -30,6 +31,9 @@ const (
 	postStmt      string = "select id, title, content, created, updated, tags from posts where id = ?"
 )
 
+var (
+	NotFound error = errors.New("Not Found")
+)
 func NewDb(uri string) DbConn {
 	db, err := sql.Open("sqlite3", uri)
 	if err != nil {
@@ -87,7 +91,9 @@ func (conn *DbConn) Post(id string) (Post, error) {
 	}
 	defer rows.Close()
 	var post Post
+	hasRow := false
 	for rows.Next() {
+		hasRow = true
 		var id string
 		var title string
 		var content string
@@ -108,7 +114,11 @@ func (conn *DbConn) Post(id string) (Post, error) {
 		duration := time.Duration(math.Ceil(float64(wordCount(content))/239.0) * 60000000000)
 		post = Post{id, title, content, created, updated, tags, duration}
 	}
+	if hasRow {
 	return post, nil
+	} else {
+		return post, NotFound
+	}
 }
 
 /// returns posts with only 0 chars of post text and no duration

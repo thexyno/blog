@@ -1,0 +1,29 @@
+{% import (
+   "github.com/thexyno/xynoblog/db"
+   )
+%}
+
+{% code
+type PostsPage struct {
+    Posts []db.Post
+}
+%}
+
+
+{% func (p *PostsPage) Title() %}
+	Posts - xynos space
+{% endfunc %}
+
+
+{% func (p *PostsPage) Body() %}
+	<div class="mx-auto container max-w-6xl">
+	<h3 class="pt-4 text-xl font-semibold">Posts:</h3>
+      <div class="px-8 flex flex-col">
+      {% if len(p.Posts) == 0 %}
+	  	No posts.
+	  {% else %}
+	  		{%= emitPosts(p.Posts) %}
+	  {% endif %}
+	  </div>
+	</div>
+{% endfunc %}

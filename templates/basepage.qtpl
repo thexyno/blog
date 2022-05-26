@@ -10,7 +10,6 @@ Page {
 }
 %}
 
-
 {% func PageTemplate(p Page) %}
 <!doctype html>
 <html>
@@ -23,9 +22,10 @@ Page {
     <body>
       <div class="top-0 z-40 w-full backdrop-blur flex-none">
         <div class="max-w-8xl mx-auto">
-          <div class="py-4 lg:px-8 mx-4 lg:mx-0">
+          <div class="py-4 lg:px-8 mx-8">
             <div class="relative flex items-center">
-              <a class="mr-3 text-2xl flex-none text-neutral_orange hover:font-bold font-semibold overflow-hidden md:w-auto" href="/">xynos space</a>
+              <a class="pr-8 mr-3 text-2xl flex-none text-neutral_orange visited:text-neutral_orange hover:text-bright_orange font-semibold overflow-hidden md:w-auto" href="/">xynos space</a>
+              <a class="mr-3 text-xl flex-none font-semibold overflow-hidden md:w-auto" href="/posts">Blog</a>
             </div>
           </div>
         </div>

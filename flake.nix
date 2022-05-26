@@ -38,7 +38,13 @@
             # in the Nix store.
             src = ./.;
             postBuild = ''
-              ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/*.css -o $out/cssdist/output.css --minify
+              ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/main.css -o $out/cssdist/output.css --minify
+            '';
+            preFixup = ''
+              for f in $(find $out/bin/ -type f -executable); do
+                wrapProgram "$f" \
+                  --prefix XYNOBLOG_FONT_DIR : "${pkgs.jetbrains-mono}/share/fonts/truetype"
+              done
             '';
 
             # This hash locks the dependencies of this package. It is
@@ -51,7 +57,7 @@
             # remeber to bump this hash when your dependencies change.
             #vendorSha256 = pkgs.lib.fakeSha256;
 
-            vendorSha256 = "sha256-LF9FuGw45VZUDZApe54m/a37cgFiFuA3DhFbYWh1ZXo=";
+            vendorSha256 = "sha256-2zaS5UW55if7Kzqv3MxFTEwg6PZ92rVsaBiwNTi2BDA=";
           };
         });
 
@@ -59,6 +65,11 @@
       # flake provides only one package or there is a clear "main"
       # package.
       defaultPackage = forAllSystems (system: self.packages.${system}.xynoblog);
-      devShell = forAllSystems (system: let pkgs = nixpkgsFor.${system}; in (pkgs.mkShell  { buildInputs = [ pkgs.gopls pkgs.go pkgs.nodePackages.tailwindcss ];}));
+      devShell = forAllSystems (system:
+        let pkgs = nixpkgsFor.${system}; in
+        (pkgs.mkShell {
+          XYNOBLOG_FONT_DIR = "${pkgs.jetbrains-mono}/share/fonts/truetype";
+          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go pkgs.nodePackages.tailwindcss ];
+        }));
     };
 }

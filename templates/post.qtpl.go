@@ -71,7 +71,7 @@ func (p *PostPage) Title() string {
 func (p *PostPage) StreamBody(qw422016 *qt422016.Writer) {
 //line templates/post.qtpl:18
 	qw422016.N().S(`
-	<article class="mx-auto container">
+	<article class="mx-auto container max-w-7xl">
       <div class="pt-8 py-8">
       	<h1 class="p-0">`)
 //line templates/post.qtpl:21

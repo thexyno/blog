@@ -3,10 +3,9 @@
 package xynoblog
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/gorilla/mux"
 	"github.com/thexyno/xynoblog/db"
 	"github.com/thexyno/xynoblog/templates"
@@ -30,16 +29,43 @@ func RequestLoggerMiddleware(r *mux.Router) mux.MiddlewareFunc {
 	}
 }
 
-func renderError(w http.ResponseWriter, r *http.Request, err string) {
-	w.WriteHeader(500)
-	fmt.Fprint(w, "Uff: ", err)
+func renderError(w http.ResponseWriter, r *http.Request, err error) {
+	var p *templates.ErrorPage
+	if err == db.NotFound {
+    	w.WriteHeader(404)
+		p = &templates.ErrorPage{
+			Message: "Not Found",
+		}
+	} else {
+	  w.WriteHeader(500)
+		p = &templates.ErrorPage{
+			Message: "Internal Server Error",
+		}
+	}
+	templates.WritePageTemplate(w,p)
 }
 
+
+func renderPosts(db db.DbConn) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		posts, err := db.ShortPosts(1000, 0)
+		if err != nil {
+			log.WithField("request", r.URL.Path).Error(err)
+			renderError(w, r, err)
+			return
+		}
+		p := &templates.PostsPage{
+			Posts: posts,
+		}
+		templates.WritePageTemplate(w, p)
+	}
+}
 func renderIndex(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		posts, err := db.ShortPosts(5, 0)
 		if err != nil {
-			renderError(w, r, err.Error())
+			log.WithField("request", r.URL.Path).Error(err)
+			renderError(w, r, err)
 			return
 		}
 		p := &templates.IndexPage{
@@ -54,7 +80,8 @@ func renderPost(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 		key := vars["id"]
 		post, err := db.Post(key)
 		if err != nil {
-			renderError(w, r, err.Error())
+			log.WithField("request", r.URL.Path).Error(err)
+			renderError(w, r, err)
 			return
 		}
 		rendered := Render([]byte(post.Content))
@@ -66,13 +93,16 @@ func renderPost(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-func Mux(db db.DbConn) *mux.Router {
+func Mux(db db.DbConn, fontdir string, cssdir string) *mux.Router {
 	mux := mux.NewRouter()
 	mux.Use(RequestLoggerMiddleware(mux))
 	mux.HandleFunc("/", renderIndex(db))
+	mux.HandleFunc("/posts", renderPosts(db))
 	mux.HandleFunc("/post/{id}", renderPost(db))
-	fileServer := http.FileServer(http.Dir("./cssdist"))
-	mux.PathPrefix("/css/").Handler(http.StripPrefix("/css", fileServer))
+	CSSFileServer := http.FileServer(http.Dir(cssdir))
+	mux.PathPrefix("/css/").Handler(http.StripPrefix("/css", CSSFileServer))
+	FontFileServer := http.FileServer(http.Dir(fontdir))
+	mux.PathPrefix("/fonts/").Handler(http.StripPrefix("/fonts", FontFileServer))
 
 	return mux
 }

@@ -16,7 +16,7 @@ type PostPage struct {
 
 
 {% func (p *PostPage) Body() %}
-	<article class="mx-auto container">
+	<article class="mx-auto container max-w-7xl">
       <div class="pt-8 py-8">
       	<h1 class="p-0">{%s p.Post.Title %}</h1>
         <p class="pl-2 text-xs font-thin text-dark3 dark:text-light3 ">Released On: {%s p.Post.Created.Format("2006-01-02 15:04Z07:00") %}</p>
