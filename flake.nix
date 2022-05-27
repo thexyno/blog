@@ -2,7 +2,7 @@
   description = "A simple Go package";
 
   # Nixpkgs / NixOS version to use.
-  inputs.nixpkgs.url = "nixpkgs/nixos-unstable"; # Tailwind isn't in 21.11
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"; # Tailwind isn't in 21.11
 
   outputs = { self, nixpkgs }:
     let
@@ -69,7 +69,7 @@
         let pkgs = nixpkgsFor.${system}; in
         (pkgs.mkShell {
           XYNOBLOG_FONT_DIR = "${pkgs.jetbrains-mono}/share/fonts/truetype";
-          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go pkgs.nodePackages.tailwindcss ];
+          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go pkgs.nodePackages.tailwindcss pkgs.lefthook ];
         }));
     };
 }

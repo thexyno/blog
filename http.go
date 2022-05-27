@@ -5,8 +5,8 @@ package xynoblog
 import (
 	"net/http"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 	"github.com/thexyno/xynoblog/db"
 	"github.com/thexyno/xynoblog/templates"
 )
@@ -32,19 +32,18 @@ func RequestLoggerMiddleware(r *mux.Router) mux.MiddlewareFunc {
 func renderError(w http.ResponseWriter, r *http.Request, err error) {
 	var p *templates.ErrorPage
 	if err == db.NotFound {
-    	w.WriteHeader(404)
+		w.WriteHeader(404)
 		p = &templates.ErrorPage{
 			Message: "Not Found",
 		}
 	} else {
-	  w.WriteHeader(500)
+		w.WriteHeader(500)
 		p = &templates.ErrorPage{
 			Message: "Internal Server Error",
 		}
 	}
-	templates.WritePageTemplate(w,p)
+	templates.WritePageTemplate(w, p)
 }
-
 
 func renderPosts(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {

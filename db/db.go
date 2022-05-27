@@ -17,12 +17,12 @@ type DbConn struct {
 }
 
 type Post struct {
-	Id      string
-	Title   string
-	Content string
-	Created time.Time
-	Updated time.Time
-	Tags    []string
+	Id         string
+	Title      string
+	Content    string
+	Created    time.Time
+	Updated    time.Time
+	Tags       []string
 	TimeToRead time.Duration
 }
 
@@ -34,6 +34,7 @@ const (
 var (
 	NotFound error = errors.New("Not Found")
 )
+
 func NewDb(uri string) DbConn {
 	db, err := sql.Open("sqlite3", uri)
 	if err != nil {
@@ -75,12 +76,12 @@ func (conn *DbConn) Add(post Post) error {
 }
 
 func wordCount(value string) int {
-    // Match non-space character sequences.
-    re := regexp.MustCompile(`[\S]+`)
+	// Match non-space character sequences.
+	re := regexp.MustCompile(`[\S]+`)
 
-    // Find all matches and return count.
-    results := re.FindAllString(value, -1)
-    return len(results)
+	// Find all matches and return count.
+	results := re.FindAllString(value, -1)
+	return len(results)
 }
 
 /// returns post  with id = id
@@ -115,7 +116,7 @@ func (conn *DbConn) Post(id string) (Post, error) {
 		post = Post{id, title, content, created, updated, tags, duration}
 	}
 	if hasRow {
-	return post, nil
+		return post, nil
 	} else {
 		return post, NotFound
 	}
@@ -135,7 +136,7 @@ func (conn *DbConn) ShortPosts(limit uint, skip uint) ([]Post, error) {
 		var created time.Time
 		var updated time.Time
 		var tmpTags string
-		rowErr := rows.Scan(&id, &title,&created, &updated, &tmpTags)
+		rowErr := rows.Scan(&id, &title, &created, &updated, &tmpTags)
 		if rowErr != nil {
 			log.Print("ShortPosts row Error: ", rowErr)
 		}

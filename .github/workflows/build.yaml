@@ -26,9 +26,9 @@ jobs:
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
       - name: build
         run: nix build
-      - name: Archive result artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: result
-          path: |
-            result
+#      - name: Archive result artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: result
+#          path: |
+#            result

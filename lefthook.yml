@@ -1,0 +1,9 @@
+pre-commit:
+  commands:
+    nixfmt:
+      glob: "*.nix"
+      run: nixpkgs-fmt {staged_files} && git add {staged_files}
+    gofmt:
+      glob: "*.go"
+      exclude: ".*qtpl\\.go"
+      run: gofmt -s -w {staged_files} && git add {staged_files}
