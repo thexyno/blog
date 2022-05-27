@@ -160,7 +160,7 @@ func streamemitPosts(qw422016 *qt422016.Writer, posts []db.Post) {
 		qw422016.N().S(`
      <a href="/post/`)
 //line templates/index.qtpl:60
-		qw422016.E().S(v.Id)
+		qw422016.E().S(string(v.Id))
 //line templates/index.qtpl:60
 		qw422016.N().S(`">
       <span>`)

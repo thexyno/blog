@@ -57,7 +57,7 @@ type IndexPage struct {
 
 {% func emitPosts(posts []db.Post) %}
    {% for _,v := range posts %}
-     <a href="/post/{%s v.Id %}">
+     <a href="/post/{%s string(v.Id) %}">
       <span>{%s v.Title %}</span>
       <span class="text-xs font-thin text-dark3 dark:text-light3 ">({%s v.Created.Format("2006-01-02") %})</span>
      </a>

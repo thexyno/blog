@@ -30,6 +30,8 @@ func RequestLoggerMiddleware(r *mux.Router) mux.MiddlewareFunc {
 }
 
 func renderError(w http.ResponseWriter, r *http.Request, err error) {
+
+	log.WithField("request", r.URL.Path).Error(err)
 	var p *templates.ErrorPage
 	if err == db.NotFound {
 		w.WriteHeader(404)
@@ -47,9 +49,8 @@ func renderError(w http.ResponseWriter, r *http.Request, err error) {
 
 func renderPosts(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		posts, err := db.ShortPosts(1000, 0)
+		posts, err := db.ShortPosts(0, 1000, 0)
 		if err != nil {
-			log.WithField("request", r.URL.Path).Error(err)
 			renderError(w, r, err)
 			return
 		}
@@ -61,9 +62,8 @@ func renderPosts(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 }
 func renderIndex(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		posts, err := db.ShortPosts(5, 0)
+		posts, err := db.ShortPosts(0, 5, 0)
 		if err != nil {
-			log.WithField("request", r.URL.Path).Error(err)
 			renderError(w, r, err)
 			return
 		}
@@ -79,7 +79,6 @@ func renderPost(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 		key := vars["id"]
 		post, err := db.Post(key)
 		if err != nil {
-			log.WithField("request", r.URL.Path).Error(err)
 			renderError(w, r, err)
 			return
 		}
@@ -97,6 +96,10 @@ func Mux(db db.DbConn, fontdir string, cssdir string) *mux.Router {
 	mux.Use(RequestLoggerMiddleware(mux))
 	mux.HandleFunc("/", renderIndex(db))
 	mux.HandleFunc("/posts", renderPosts(db))
+	mux.HandleFunc("/posts.rss", renderRSS(db))
+	mux.HandleFunc("/posts.atom", renderAtom(db))
+	mux.HandleFunc("/posts.json", renderJSONFeed(db))
+	mux.HandleFunc("/sitemap.xml", renderSitemap(db))
 	mux.HandleFunc("/post/{id}", renderPost(db))
 	CSSFileServer := http.FileServer(http.Dir(cssdir))
 	mux.PathPrefix("/css/").Handler(http.StripPrefix("/css", CSSFileServer))

@@ -16,8 +16,10 @@ type DbConn struct {
 	db *sql.DB
 }
 
+type PostId string
+
 type Post struct {
-	Id         string
+	Id         PostId
 	Title      string
 	Content    string
 	Created    time.Time
@@ -27,7 +29,8 @@ type Post struct {
 }
 
 const (
-	shortPostStmt string = "select id, title, created, updated, tags from posts order by created desc limit ? offset ?"
+	shortPostStmt string = "select id, title, substr(content,0,?), created, updated, tags from posts order by created desc limit ? offset ?"
+	postIdStmt    string = "select id, updated from posts"
 	postStmt      string = "select id, title, content, created, updated, tags from posts where id = ?"
 )
 
@@ -95,7 +98,7 @@ func (conn *DbConn) Post(id string) (Post, error) {
 	hasRow := false
 	for rows.Next() {
 		hasRow = true
-		var id string
+		var id PostId
 		var title string
 		var content string
 		var created time.Time
@@ -122,21 +125,44 @@ func (conn *DbConn) Post(id string) (Post, error) {
 	}
 }
 
-/// returns posts with only 0 chars of post text and no duration
-func (conn *DbConn) ShortPosts(limit uint, skip uint) ([]Post, error) {
-	rows, err := conn.db.Query(string(shortPostStmt), limit, skip)
+func (conn *DbConn) PostIds() ([]PostId, []time.Time, error) {
+	rows, err := conn.db.Query(string(postIdStmt))
+	if err != nil {
+		return []PostId{}, nil, err
+	}
+	defer rows.Close()
+	ids := []PostId{}
+	times := []time.Time{}
+	for rows.Next() {
+		var id PostId
+		var updated time.Time
+		rowErr := rows.Scan(&id, &updated)
+		if rowErr != nil {
+			return []PostId{}, nil, rowErr
+		}
+		ids = append(ids, id)
+		times = append(times, updated)
+	}
+	return ids, times, nil
+}
+
+// returns posts with only textLength chars of post text and no duration
+// limit = -1 returns all
+func (conn *DbConn) ShortPosts(textLength uint, limit int, skip uint) ([]Post, error) {
+	rows, err := conn.db.Query(string(shortPostStmt), textLength, limit, skip)
 	if err != nil {
 		return []Post{}, err
 	}
 	defer rows.Close()
 	posts := []Post{}
 	for rows.Next() {
-		var id string
+		var id PostId
 		var title string
+		var content string
 		var created time.Time
 		var updated time.Time
 		var tmpTags string
-		rowErr := rows.Scan(&id, &title, &created, &updated, &tmpTags)
+		rowErr := rows.Scan(&id, &title, &content, &created, &updated, &tmpTags)
 		if rowErr != nil {
 			log.Print("ShortPosts row Error: ", rowErr)
 		}
@@ -145,7 +171,7 @@ func (conn *DbConn) ShortPosts(limit uint, skip uint) ([]Post, error) {
 		if tagsErr != nil {
 			log.Print("ShortPosts tags Error: ", tagsErr)
 		}
-		posts = append(posts, Post{id, title, "", created, updated, tags, time.Duration(0)})
+		posts = append(posts, Post{id, title, content, created, updated, tags, time.Duration(0)})
 	}
 	return posts, nil
 }

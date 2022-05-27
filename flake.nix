@@ -31,7 +31,7 @@
           pkgs = nixpkgsFor.${system};
         in
         {
-          xynoblog = pkgs.buildGoModule {
+          xynoblog = pkgs.buildGo118Module {
             pname = "xynoblog";
             inherit version;
             # In 'nix develop', we don't need a copy of the source tree
@@ -69,7 +69,7 @@
         let pkgs = nixpkgsFor.${system}; in
         (pkgs.mkShell {
           XYNOBLOG_FONT_DIR = "${pkgs.jetbrains-mono}/share/fonts/truetype";
-          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go pkgs.nodePackages.tailwindcss pkgs.lefthook ];
+          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go_1_18 pkgs.nodePackages.tailwindcss pkgs.lefthook ];
         }));
     };
 }
