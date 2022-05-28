@@ -2,9 +2,9 @@ package xynoblog
 
 import (
 	"fmt"
-	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gorilla/feeds"
 	log "github.com/sirupsen/logrus"
 	"github.com/thexyno/xynoblog/db"
@@ -41,60 +41,61 @@ func generateFeed(dbc db.DbConn) (*feeds.Feed, error) {
 	}, nil
 }
 
-func renderISE(w http.ResponseWriter, r *http.Request, err error) {
-	log.WithField("request", r.URL.Path).Error(err)
-	w.WriteHeader(500)
-	fmt.Fprint(w, "Internal Server Error")
+func renderISE(c *gin.Context, err error) {
+	log.WithField("request", c.FullPath()).Error(err)
+	c.Status(500)
+	fmt.Fprint(c.Writer, "Internal Server Error")
 	return
 }
 
-func renderRSS(db db.DbConn) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func renderRSS(db db.DbConn) func(c *gin.Context) {
+	return func(c *gin.Context) {
 		feed, err := generateFeed(db)
 		if err != nil {
-			renderISE(w, r, err)
+			renderISE(c, err)
 			return
 		}
 		feedrss, err := feed.ToRss()
 		if err != nil {
-			renderISE(w, r, err)
+			renderISE(c, err)
 			return
 		}
-		w.Header().Add("Content-Type", "application/rss+xml")
-		fmt.Fprint(w, feedrss)
+
+		c.Writer.Header().Add("Content-Type", "application/rss+xml")
+		fmt.Fprint(c.Writer, feedrss)
 	}
 }
 
-func renderAtom(db db.DbConn) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func renderAtom(db db.DbConn) func(c *gin.Context) {
+	return func(c *gin.Context) {
 		feed, err := generateFeed(db)
 		if err != nil {
-			renderISE(w, r, err)
+			renderISE(c, err)
 			return
 		}
 		feedatom, err := feed.ToAtom()
 		if err != nil {
-			renderISE(w, r, err)
+			renderISE(c, err)
 			return
 		}
-		w.Header().Add("Content-Type", "application/atom+xml")
-		fmt.Fprint(w, feedatom)
+		c.Writer.Header().Add("Content-Type", "application/atom+xml")
+		fmt.Fprint(c.Writer, feedatom)
 	}
 }
 
-func renderJSONFeed(db db.DbConn) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func renderJSONFeed(db db.DbConn) func(c *gin.Context) {
+	return func(c *gin.Context) {
 		feed, err := generateFeed(db)
 		if err != nil {
-			renderISE(w, r, err)
+			renderISE(c, err)
 			return
 		}
 		feedjsonfeed, err := feed.ToJSON()
 		if err != nil {
-			renderISE(w, r, err)
+			renderISE(c, err)
 			return
 		}
-		w.Header().Add("Content-Type", "application/feed+json")
-		fmt.Fprint(w, feedjsonfeed)
+		c.Writer.Header().Add("Content-Type", "application/feed+json")
+		fmt.Fprint(c.Writer, feedjsonfeed)
 	}
 }

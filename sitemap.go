@@ -3,9 +3,9 @@ package xynoblog
 import (
 	"encoding/xml"
 	"fmt"
-	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/thexyno/xynoblog/db"
 )
@@ -22,12 +22,12 @@ type urlblock struct {
 	Priority   float64 `xml:"priority"`
 }
 
-func renderSitemap(db db.DbConn) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func renderSitemap(db db.DbConn) func(*gin.Context) {
+	return func(c *gin.Context) {
 		post, times, err := db.PostIds()
 		if err != nil {
-			log.WithField("request", r.URL.Path).Error(err)
-			renderError(w, r, err)
+			log.WithField("request", c.Request.URL.Path).Error(err)
+			renderISE(c, err)
 			return
 		}
 		var newest time.Time
@@ -51,12 +51,10 @@ func renderSitemap(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 		urls := urlset{Xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9", Url: blocks}
 		bytes, err := xml.Marshal(urls)
 		if err != nil {
-			log.Error("Sitemap Generation Error")
-			w.WriteHeader(500)
-			fmt.Fprint(w, "Internal Server Error")
+			renderISE(c, err)
 			return
 		}
-		w.Write([]byte(`<?xml version="1.0" encoding="UTF-8"?>`))
-		w.Write(bytes)
+		c.Writer.Write([]byte(`<?xml version="1.0" encoding="UTF-8"?>`))
+		c.Writer.Write(bytes)
 	}
 }

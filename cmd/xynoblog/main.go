@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -33,5 +32,5 @@ func main() {
 	log.Printf("Fontdir: %s, CSSDir: %s", fontdir, cssdir)
 	mux := xynoblog.Mux(database, fontdir, cssdir)
 	log.Printf("Started Xynoblog on %s", port)
-	log.Fatal(http.ListenAndServe(port, mux))
+	mux.Run()
 }

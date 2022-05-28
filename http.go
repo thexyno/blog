@@ -3,83 +3,67 @@
 package xynoblog
 
 import (
-	"net/http"
-
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/thexyno/xynoblog/db"
 	"github.com/thexyno/xynoblog/templates"
 )
 
-func RequestLoggerMiddleware(r *mux.Router) mux.MiddlewareFunc {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			defer func() {
-				log.Printf(
-					"[%s] %s %s %s",
-					req.Method,
-					req.Host,
-					req.URL.Path,
-					req.URL.RawQuery,
-				)
-			}()
-
-			next.ServeHTTP(w, req)
-		})
-	}
-}
-
-func renderError(w http.ResponseWriter, r *http.Request, err error) {
-
-	log.WithField("request", r.URL.Path).Error(err)
+func renderError(c *gin.Context, err error) {
+	log.WithField("request", c.FullPath()).Error(err)
 	var p *templates.ErrorPage
 	if err == db.NotFound {
-		w.WriteHeader(404)
+		c.Status(404)
 		p = &templates.ErrorPage{
 			Message: "Not Found",
 		}
 	} else {
-		w.WriteHeader(500)
+		c.Status(500)
 		p = &templates.ErrorPage{
 			Message: "Internal Server Error",
 		}
 	}
-	templates.WritePageTemplate(w, p)
+	templates.WritePageTemplate(c.Writer, p)
 }
 
-func renderPosts(db db.DbConn) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func renderPosts(db db.DbConn) func(*gin.Context) {
+	return func(c *gin.Context) {
 		posts, err := db.ShortPosts(0, 1000, 0)
 		if err != nil {
-			renderError(w, r, err)
+			renderError(c, err)
 			return
 		}
 		p := &templates.PostsPage{
 			Posts: posts,
 		}
-		templates.WritePageTemplate(w, p)
+		templates.WritePageTemplate(c.Writer, p)
 	}
 }
-func renderIndex(db db.DbConn) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func renderIndex(db db.DbConn) func(*gin.Context) {
+	return func(c *gin.Context) {
 		posts, err := db.ShortPosts(0, 5, 0)
 		if err != nil {
-			renderError(w, r, err)
+			renderError(c, err)
 			return
 		}
 		p := &templates.IndexPage{
 			Posts: posts,
 		}
-		templates.WritePageTemplate(w, p)
+		templates.WritePageTemplate(c.Writer, p)
 	}
 }
-func renderPost(db db.DbConn) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		key := vars["id"]
-		post, err := db.Post(key)
+func renderPost(db db.DbConn) func(*gin.Context) {
+	return func(c *gin.Context) {
+		var id struct {
+			Id string `uri:"id" binding:"required"`
+		}
+		if err := c.ShouldBindUri(&id); err != nil {
+			renderError(c, err)
+			return
+		}
+		post, err := db.Post(id.Id)
 		if err != nil {
-			renderError(w, r, err)
+			renderError(c, err)
 			return
 		}
 		rendered := Render([]byte(post.Content))
@@ -87,24 +71,23 @@ func renderPost(db db.DbConn) func(http.ResponseWriter, *http.Request) {
 			Post:            post,
 			RenderedContent: rendered,
 		}
-		templates.WritePageTemplate(w, p)
+		templates.WritePageTemplate(c.Writer, p)
 	}
 }
 
-func Mux(db db.DbConn, fontdir string, cssdir string) *mux.Router {
-	mux := mux.NewRouter()
-	mux.Use(RequestLoggerMiddleware(mux))
-	mux.HandleFunc("/", renderIndex(db))
-	mux.HandleFunc("/posts", renderPosts(db))
-	mux.HandleFunc("/posts.rss", renderRSS(db))
-	mux.HandleFunc("/posts.atom", renderAtom(db))
-	mux.HandleFunc("/posts.json", renderJSONFeed(db))
-	mux.HandleFunc("/sitemap.xml", renderSitemap(db))
-	mux.HandleFunc("/post/{id}", renderPost(db))
-	CSSFileServer := http.FileServer(http.Dir(cssdir))
-	mux.PathPrefix("/css/").Handler(http.StripPrefix("/css", CSSFileServer))
-	FontFileServer := http.FileServer(http.Dir(fontdir))
-	mux.PathPrefix("/fonts/").Handler(http.StripPrefix("/fonts", FontFileServer))
+func Mux(db db.DbConn, fontdir string, cssdir string) *gin.Engine {
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
+	r.GET("/", renderIndex(db))
+	r.GET("/posts", renderPosts(db))
+	r.GET("/posts.rss", renderRSS(db))
+	r.GET("/posts.atom", renderAtom(db))
+	r.GET("/posts.json", renderJSONFeed(db))
+	r.GET("/sitemap.xml", renderSitemap(db))
+	r.GET("/post/:id", renderPost(db))
+	r.Static("/css", cssdir)
+	r.Static("/fonts", fontdir)
 
-	return mux
+	return r
 }
