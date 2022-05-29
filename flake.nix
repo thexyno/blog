@@ -31,20 +31,27 @@
           pkgs = nixpkgsFor.${system};
         in
         {
-          xynoblog = pkgs.buildGo118Module {
+          xynoblog = pkgs.buildGo118Module rec {
             pname = "xynoblog";
             inherit version;
             # In 'nix develop', we don't need a copy of the source tree
             # in the Nix store.
             src = ./.;
+
             postBuild = ''
-              ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/main.css -o $out/cssdist/output.css --minify
+              ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/main.css -o $out/share/xynoblog/cssdist/output.css --minify
             '';
             preFixup = ''
-              for f in $(find $out/bin/ -type f -executable); do
-                wrapProgram "$f" \
-                  --prefix XYNOBLOG_FONT_DIR : "${pkgs.jetbrains-mono}/share/fonts/truetype"
-              done
+              wrapProgram $out/bin/xynoblog \
+                --prefix XYNOBLOG_FONTDIR : "${pkgs.jetbrains-mono}/share/fonts/truetype" \
+                --prefix XYNOBLOG_CSSDIR : "$out/share/xynoblog/cssdist" \
+                --prefix XYNOBLOG_RELEASEMODE : "${pkgs.jetbrains-mono}/share/fonts/truetype"
+            '';
+            postInstall = ''
+              installShellCompletion --cmd ${pname} \
+                --bash <($out/bin/${pname} completion bash) \
+                --fish <($out/bin/${pname} completion fish) \
+                --zsh  <($out/bin/${pname} completion zsh)
             '';
 
             # This hash locks the dependencies of this package. It is
@@ -57,7 +64,7 @@
             # remeber to bump this hash when your dependencies change.
             #vendorSha256 = pkgs.lib.fakeSha256;
 
-            vendorSha256 = "sha256-aq7GHAaM12iJ9d6NFiVYqVvYzc7icljgSYso/1vv6us=";
+            vendorSha256 = "sha256-uGXtKh+wrF6CgDFR6lFjNb+8lbovWi3Tx4WCeykcPUM=";
           };
         });
 
@@ -68,7 +75,7 @@
       devShell = forAllSystems (system:
         let pkgs = nixpkgsFor.${system}; in
         (pkgs.mkShell {
-          XYNOBLOG_FONT_DIR = "${pkgs.jetbrains-mono}/share/fonts/truetype";
+          XYNOBLOG_FONTDIR = "${pkgs.jetbrains-mono}/share/fonts/truetype";
           buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go_1_18 pkgs.nodePackages.tailwindcss pkgs.lefthook ];
         }));
     };

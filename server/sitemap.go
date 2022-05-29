@@ -1,4 +1,4 @@
-package xynoblog
+package server
 
 import (
 	"encoding/xml"

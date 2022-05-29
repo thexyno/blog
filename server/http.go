@@ -1,6 +1,6 @@
 //go:generate go get -d github.com/valyala/quicktemplate/qtc
 //go:generate qtc -dir=templates
-package xynoblog
+package server
 
 import (
 	"github.com/gin-gonic/gin"
