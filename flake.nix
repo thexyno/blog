@@ -37,6 +37,7 @@
             # In 'nix develop', we don't need a copy of the source tree
             # in the Nix store.
             src = ./.;
+            nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper ];
 
             postBuild = ''
               ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/main.css -o $out/share/xynoblog/cssdist/output.css --minify
@@ -45,7 +46,8 @@
               wrapProgram $out/bin/xynoblog \
                 --prefix XYNOBLOG_FONTDIR : "${pkgs.jetbrains-mono}/share/fonts/truetype" \
                 --prefix XYNOBLOG_CSSDIR : "$out/share/xynoblog/cssdist" \
-                --prefix XYNOBLOG_RELEASEMODE : "${pkgs.jetbrains-mono}/share/fonts/truetype"
+                --prefix GIN_MODE : "release" \
+                --prefix XYNOBLOG_RELEASEMODE : "true"
             '';
             postInstall = ''
               installShellCompletion --cmd ${pname} \
@@ -64,7 +66,7 @@
             # remeber to bump this hash when your dependencies change.
             #vendorSha256 = pkgs.lib.fakeSha256;
 
-            vendorSha256 = "sha256-uGXtKh+wrF6CgDFR6lFjNb+8lbovWi3Tx4WCeykcPUM=";
+            vendorSha256 = "sha256-NRRpinxjE6LmJcJVAl3tzByn104+uSKkjR/GLMVZcSg=";
           };
         });
 
