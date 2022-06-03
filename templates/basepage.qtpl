@@ -20,7 +20,7 @@ Page {
       <title>{%= p.Title() %}</title>
     </head>
     <body>
-      <div class="top-0 z-40 w-full backdrop-blur flex-none">
+      <header class="top-0 z-40 w-full backdrop-blur flex-none">
         <div class="max-w-8xl mx-auto">
           <div class="py-4 lg:px-8 mx-8">
             <div class="relative flex items-center">
@@ -29,7 +29,7 @@ Page {
             </div>
           </div>
         </div>
-      </div>
+      </header>
       {%= p.Body() %}
       <footer class="flex justify-center w-screen bottom-0 pt-12 backdrop-blur">
         <p>Copyright (C) {%d time.Now().Year() %} xyno (Philipp Hochkamp)

@@ -18,6 +18,7 @@ type PostsPage struct {
 {% func (p *PostsPage) Body() %}
 	<div class="mx-auto container max-w-6xl">
 	<h3 class="pt-4 text-xl font-semibold">Posts:</h3>
+    <p class="px-4 pb-4 text-sm font-light text-dark3 dark:text-light3" >Feeds: <a href="/posts.rss">rss</a>&nbsp;<a href="/posts.atom">atom</a>&nbsp;<a href="/posts.json">jsonfeed</a></p>
       <div class="px-8 flex flex-col">
       {% if len(p.Posts) == 0 %}
 	  	No posts.

@@ -20,6 +20,10 @@ type PostPage struct {
       <div class="pt-8 py-8">
       	<h1 class="p-0">{%s p.Post.Title %}</h1>
         <p class="pl-2 text-xs font-thin text-dark3 dark:text-light3 ">Released On: {%s p.Post.Created.Format("2006-01-02 15:04Z07:00") %}</p>
+        {% if !p.Post.Created.Equal(p.Post.Updated) %}
+        <p class="pl-2 text-xs font-thin text-dark3 dark:text-light3 ">Last Updated On: {%s p.Post.Updated.Format("2006-01-02 15:04Z07:00") %}</p>
+        {% endif %}
+
         <p class="pl-2 text-xs font-thin text-dark3 dark:text-light3 ">A {%f.0 p.Post.TimeToRead.Minutes() %} minute read.</p>
       </div>
 	  {%z= p.RenderedContent %}

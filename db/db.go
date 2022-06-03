@@ -55,17 +55,6 @@ func (conn *DbConn) Seed() error {
 create table if not exists posts (id text primary key not null, title text not null, content text not null, created datetime not null, updated datetime not null, tags text not null);
 `
 	_, err := conn.db.Exec(stmt)
-	if err != nil {
-		return err
-	}
-	err = conn.Add(Post{
-		Id:      "i-like-lorem-ipsum",
-		Title:   "I like lorem ipsum",
-		Content: "Lorem ipsum dolor sit amet",
-		Created: time.Now(),
-		Updated: time.Now(),
-		Tags:    []string{"bread", "enby"},
-	})
 	return err
 }
 
@@ -74,7 +63,17 @@ func (conn *DbConn) Add(post Post) error {
 	if err != nil {
 		return err
 	}
-	_, err = conn.db.Exec("insert or ignore into posts values (?,?,?,?,?,?)", post.Id, post.Title, post.Content, post.Created, post.Updated, tags)
+	dbpost, err := conn.Post(string(post.Id))
+	log.Infof("adding %s to posts", post.Id)
+	if err != nil || dbpost.Id == "" {
+		_, err = conn.db.Exec("insert into posts values (?,?,?,?,?,?)", post.Id, post.Title, post.Content, post.Created, post.Updated, tags)
+		log.Info("added via insert")
+	} else if dbpost.Updated.Before(post.Updated) || dbpost.Content != post.Content {
+		_, err = conn.db.Exec("update posts set title = ?, content = ?, created = ?, updated = ?, tags = ? WHERE id = ?", post.Title, post.Content, post.Created, post.Updated, tags, post.Id)
+		log.Info("added via update")
+	} else {
+		log.Info("post didnt change")
+	}
 	return err
 }
 

@@ -31,10 +31,27 @@ POSSIBILITY OF SUCH DAMAGE.
 package cmd
 
 import (
-	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"github.com/thexyno/xynoblog/db"
+	"github.com/thexyno/xynoblog/server"
+	"gopkg.in/yaml.v3"
 )
+
+type mdheader struct {
+	Title   string    `yaml:"title"`
+	Id      string    `yaml:"id"`
+	Created time.Time `yaml:"created"`
+	Updated time.Time `yaml:"updated"`
+	Tags    []string  `yaml:"tags"`
+}
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
@@ -47,7 +64,42 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
+		for _, arg := range args {
+			filepath.Walk(arg, func(path string, info os.FileInfo, err error) error {
+				if !info.IsDir() && strings.HasSuffix(path, ".md") {
+					md, err := ioutil.ReadFile(path)
+					if err != nil {
+						log.Error(err)
+						return err
+					}
+					mdsplit := strings.Split(string(md), "---")
+					yml := mdsplit[1]
+					var header mdheader
+
+					err = yaml.Unmarshal([]byte(yml), &header)
+					if err != nil {
+						log.Error(err)
+						return err
+					}
+					mdRest := strings.Join(mdsplit[2:], "")
+					server.Render([]byte(mdRest)) // Panics when md is broken
+					dbc := db.NewDb(viper.GetString(dbURIKey))
+					if err := dbc.Add(db.Post{
+						Title:   header.Title,
+						Id:      db.PostId(header.Id),
+						Content: mdRest,
+						Created: header.Created,
+						Updated: header.Updated,
+						Tags:    header.Tags,
+					}); err != nil {
+						log.Error(err)
+						return err
+					}
+				}
+				return nil
+			})
+
+		}
 	},
 }
 
