@@ -93,7 +93,7 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 	p.StreamBody(qw422016)
 //line ../templates/basepage.qtpl:38
 	qw422016.N().S(`
-      <footer class="flex flex-col items-center justify-center w-screen bottom-0 pt-12 backdrop-blur">
+      <footer class="flex flex-col items-center justify-center bottom-0 pt-12 backdrop-blur">
         <p>Copyright (C) `)
 //line ../templates/basepage.qtpl:40
 	qw422016.N().D(time.Now().Year())
