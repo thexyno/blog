@@ -70,7 +70,7 @@
                 ProtectHome = "true";
                 ProtectSystem = "strict";
                 AmbientCapabilities = "CAP_NET_BIND_SERVICE";
-                ExecStart = "${xb}/bin/xynoblog serve --db /var/lib/${cfg.stateDirectory}/blog.db";
+                ExecStart = "${xb}/bin/xynoblog serve --listen \"${cfg.listen}\" --db /var/lib/${cfg.stateDirectory}/blog.db";
                 StateDirectory = cfg.stateDirectory;
               };
             };
@@ -94,12 +94,15 @@
               ${pkgs.go_1_18}/bin/go vet ./...
             '';
             postBuild = ''
+              mkdir -p $out/share/xynoblog
+              cp -r ./data $out/share/xynoblog/data
               ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/main.css -o $out/share/xynoblog/cssdist/output.css --minify
             '';
             preFixup = ''
               wrapProgram $out/bin/xynoblog \
                 --prefix XYNOBLOG_FONTDIR : "${pkgs.jetbrains-mono}/share/fonts/truetype" \
                 --prefix XYNOBLOG_CSSDIR : "$out/share/xynoblog/cssdist" \
+                --prefix XYNOBLOG_STATICDIR : "$out/share/xynoblog" \
                 --prefix GIN_MODE : "release" \
                 --prefix XYNOBLOG_RELEASEMODE : "true"
             '';
@@ -120,7 +123,7 @@
             # remeber to bump this hash when your dependencies change.
             #vendorSha256 = pkgs.lib.fakeSha256;
 
-            vendorSha256 = "sha256-mdM5jQ0sgl85/2qKiL5THxmGBV09vQrwAHGTLV8CBy8=";
+            vendorSha256 = "sha256-iDEkecNDNGhg2DKhGstnWBQ/skcpXUOcix5lGzocOac=";
           };
         });
 

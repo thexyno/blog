@@ -31,6 +31,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package cmd
 
 import (
+	"os"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -40,6 +41,7 @@ import (
 )
 
 const cssDirKey = "cssdir"
+const staticDirKey = "staticdir"
 const fontDirKey = "fontdir"
 const listenKey = "listen"
 const releaseModeKey = "releaseMode"
@@ -52,6 +54,7 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cssDir := viper.GetString(cssDirKey)
 		fontDir := viper.GetString(fontDirKey)
+		staticDir := viper.GetString(staticDirKey)
 		listen := viper.GetString(listenKey)
 		dbURI := viper.GetString(dbURIKey)
 		releaseMode := viper.GetBool(releaseModeKey)
@@ -63,8 +66,8 @@ var serveCmd = &cobra.Command{
 		if err != nil {
 			log.Panic(err)
 		}
-		log.Printf("Fontdir: %s, CSSDir: %s", fontDir, cssDir)
-		mux := server.Mux(database, fontDir, cssDir)
+		log.Printf("Fontdir: %s, CSSDir: %s, StaticDir: %s", fontDir, cssDir, staticDir)
+		mux := server.Mux(database, fontDir, cssDir, staticDir)
 		log.Printf("Started Xynoblog on %s", listen)
 		if releaseMode {
 			gin.SetMode(gin.ReleaseMode)
@@ -85,6 +88,12 @@ func init() {
 
 	serveCmd.Flags().String(cssDirKey, "./cssdist", "Directory containing output.css (default should be fine)")
 	viper.BindPFlag(cssDirKey, serveCmd.Flags().Lookup(cssDirKey))
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Panic(err)
+	}
+	serveCmd.Flags().String(staticDirKey, wd, "Directory containing the data folder")
+	viper.BindPFlag(staticDirKey, serveCmd.Flags().Lookup(staticDirKey))
 
 	serveCmd.Flags().String(listenKey, ":8080", "host/port to listen on")
 	viper.BindPFlag(listenKey, serveCmd.Flags().Lookup(listenKey))
