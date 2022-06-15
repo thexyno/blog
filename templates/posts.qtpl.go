@@ -30,29 +30,91 @@ type PostsPage struct {
 //line ../templates/posts.qtpl:13
 func (p *PostsPage) StreamTitle(qw422016 *qt422016.Writer) {
 //line ../templates/posts.qtpl:13
-	qw422016.N().S(`
-	Posts - xynos space
-`)
+	qw422016.N().S(`Posts - xynos space`)
+//line ../templates/posts.qtpl:13
+}
+
+//line ../templates/posts.qtpl:13
+func (p *PostsPage) WriteTitle(qq422016 qtio422016.Writer) {
+//line ../templates/posts.qtpl:13
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line ../templates/posts.qtpl:13
+	p.StreamTitle(qw422016)
+//line ../templates/posts.qtpl:13
+	qt422016.ReleaseWriter(qw422016)
+//line ../templates/posts.qtpl:13
+}
+
+//line ../templates/posts.qtpl:13
+func (p *PostsPage) Title() string {
+//line ../templates/posts.qtpl:13
+	qb422016 := qt422016.AcquireByteBuffer()
+//line ../templates/posts.qtpl:13
+	p.WriteTitle(qb422016)
+//line ../templates/posts.qtpl:13
+	qs422016 := string(qb422016.B)
+//line ../templates/posts.qtpl:13
+	qt422016.ReleaseByteBuffer(qb422016)
+//line ../templates/posts.qtpl:13
+	return qs422016
+//line ../templates/posts.qtpl:13
+}
+
+//line ../templates/posts.qtpl:14
+func (p *PostsPage) StreamDescription(qw422016 *qt422016.Writer) {
+//line ../templates/posts.qtpl:14
+	qw422016.N().S(`A Blog about Software Engineering, Hardware, NixOS, and more`)
+//line ../templates/posts.qtpl:14
+}
+
+//line ../templates/posts.qtpl:14
+func (p *PostsPage) WriteDescription(qq422016 qtio422016.Writer) {
+//line ../templates/posts.qtpl:14
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line ../templates/posts.qtpl:14
+	p.StreamDescription(qw422016)
+//line ../templates/posts.qtpl:14
+	qt422016.ReleaseWriter(qw422016)
+//line ../templates/posts.qtpl:14
+}
+
+//line ../templates/posts.qtpl:14
+func (p *PostsPage) Description() string {
+//line ../templates/posts.qtpl:14
+	qb422016 := qt422016.AcquireByteBuffer()
+//line ../templates/posts.qtpl:14
+	p.WriteDescription(qb422016)
+//line ../templates/posts.qtpl:14
+	qs422016 := string(qb422016.B)
+//line ../templates/posts.qtpl:14
+	qt422016.ReleaseByteBuffer(qb422016)
+//line ../templates/posts.qtpl:14
+	return qs422016
+//line ../templates/posts.qtpl:14
+}
+
+//line ../templates/posts.qtpl:15
+func (p *PostsPage) StreamHead(qw422016 *qt422016.Writer) {
 //line ../templates/posts.qtpl:15
 }
 
 //line ../templates/posts.qtpl:15
-func (p *PostsPage) WriteTitle(qq422016 qtio422016.Writer) {
+func (p *PostsPage) WriteHead(qq422016 qtio422016.Writer) {
 //line ../templates/posts.qtpl:15
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line ../templates/posts.qtpl:15
-	p.StreamTitle(qw422016)
+	p.StreamHead(qw422016)
 //line ../templates/posts.qtpl:15
 	qt422016.ReleaseWriter(qw422016)
 //line ../templates/posts.qtpl:15
 }
 
 //line ../templates/posts.qtpl:15
-func (p *PostsPage) Title() string {
+func (p *PostsPage) Head() string {
 //line ../templates/posts.qtpl:15
 	qb422016 := qt422016.AcquireByteBuffer()
 //line ../templates/posts.qtpl:15
-	p.WriteTitle(qb422016)
+	p.WriteHead(qb422016)
 //line ../templates/posts.qtpl:15
 	qs422016 := string(qb422016.B)
 //line ../templates/posts.qtpl:15

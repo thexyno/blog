@@ -45,7 +45,6 @@ func renderISE(c *gin.Context, err error) {
 	log.WithField("request", c.FullPath()).Error(err)
 	c.Status(500)
 	fmt.Fprint(c.Writer, "Internal Server Error")
-	return
 }
 
 func renderRSS(db db.DbConn) func(c *gin.Context) {

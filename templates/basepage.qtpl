@@ -7,8 +7,11 @@
 Page {
      Title()
      Body()
+     Description()
+     Head()
 }
 %}
+
 
 {% func PageTemplate(p Page) %}
 <!doctype html>
@@ -16,8 +19,10 @@ Page {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="{%= p.Description() %}">
       <link href="/css/output.css" rel="stylesheet">
       <title>{%= p.Title() %}</title>
+      {%= p.Head() %}
     </head>
     <body>
       <header class="top-0 z-40 w-full backdrop-blur flex-none">
@@ -31,8 +36,12 @@ Page {
         </div>
       </header>
       {%= p.Body() %}
-      <footer class="flex justify-center w-screen bottom-0 pt-12 backdrop-blur">
-        <p>Copyright (C) {%d time.Now().Year() %} xyno (Philipp Hochkamp)
+      <footer class="flex flex-col items-center justify-center w-screen bottom-0 pt-12 backdrop-blur">
+        <p>Copyright (C) {%d time.Now().Year() %} xyno (Philipp Hochkamp)</p>
+        <p>
+          <a class="pr-4" href="/impressum-de">Impressum</a>
+          <a href="/datenschutz-de">Datenschutzerklärung</a>
+        </p>
       </footer>
     </body>
 </html>

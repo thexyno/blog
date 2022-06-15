@@ -10,9 +10,9 @@ type PostsPage struct {
 %}
 
 
-{% func (p *PostsPage) Title() %}
-	Posts - xynos space
-{% endfunc %}
+{% func (p *PostsPage) Title() %}Posts - xynos space{% endfunc %}
+{% func (p *PostsPage) Description() %}A Blog about Software Engineering, Hardware, NixOS, and more{% endfunc %}
+{% func (p *PostsPage) Head() %}{% endfunc %}
 
 
 {% func (p *PostsPage) Body() %}

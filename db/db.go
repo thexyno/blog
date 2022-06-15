@@ -35,7 +35,7 @@ const (
 )
 
 var (
-	NotFound error = errors.New("Not Found")
+	ErrNotFound error = errors.New("not found")
 )
 
 func NewDb(uri string) DbConn {
@@ -120,7 +120,7 @@ func (conn *DbConn) Post(id string) (Post, error) {
 	if hasRow {
 		return post, nil
 	} else {
-		return post, NotFound
+		return post, ErrNotFound
 	}
 }
 

@@ -1,0 +1,4 @@
+Disallow: /css/
+Disallow: /fonts/
+Disallow: /impressum-*
+Disallow: /datenschutz-*

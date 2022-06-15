@@ -4,9 +4,10 @@ type ErrorPage struct {
 }
 %}
 
-{% func (p *ErrorPage) Title() %}
-	Error - Xynos Space
-{% endfunc %}
+{% func (p *ErrorPage) Title() %}Error - xynos space{% endfunc %}
+{% func (p *ErrorPage) Description() %}Error{% endfunc %}
+{% func (p *ErrorPage) Head() %}{% endfunc %}
+
 
 
 {% func (p *ErrorPage) Body() %}

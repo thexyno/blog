@@ -37,23 +37,45 @@ type Page interface {
 //line ../templates/basepage.qtpl:7
 	WriteBody(qq422016 qtio422016.Writer)
 //line ../templates/basepage.qtpl:7
+	Description() string
+//line ../templates/basepage.qtpl:7
+	StreamDescription(qw422016 *qt422016.Writer)
+//line ../templates/basepage.qtpl:7
+	WriteDescription(qq422016 qtio422016.Writer)
+//line ../templates/basepage.qtpl:7
+	Head() string
+//line ../templates/basepage.qtpl:7
+	StreamHead(qw422016 *qt422016.Writer)
+//line ../templates/basepage.qtpl:7
+	WriteHead(qq422016 qtio422016.Writer)
+//line ../templates/basepage.qtpl:7
 }
 
-//line ../templates/basepage.qtpl:13
+//line ../templates/basepage.qtpl:16
 func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
-//line ../templates/basepage.qtpl:13
+//line ../templates/basepage.qtpl:16
 	qw422016.N().S(`
 <!doctype html>
 <html>
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="`)
+//line ../templates/basepage.qtpl:22
+	p.StreamDescription(qw422016)
+//line ../templates/basepage.qtpl:22
+	qw422016.N().S(`">
       <link href="/css/output.css" rel="stylesheet">
       <title>`)
-//line ../templates/basepage.qtpl:20
+//line ../templates/basepage.qtpl:24
 	p.StreamTitle(qw422016)
-//line ../templates/basepage.qtpl:20
+//line ../templates/basepage.qtpl:24
 	qw422016.N().S(`</title>
+      `)
+//line ../templates/basepage.qtpl:25
+	p.StreamHead(qw422016)
+//line ../templates/basepage.qtpl:25
+	qw422016.N().S(`
     </head>
     <body>
       <header class="top-0 z-40 w-full backdrop-blur flex-none">
@@ -67,45 +89,49 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
         </div>
       </header>
       `)
-//line ../templates/basepage.qtpl:33
+//line ../templates/basepage.qtpl:38
 	p.StreamBody(qw422016)
-//line ../templates/basepage.qtpl:33
+//line ../templates/basepage.qtpl:38
 	qw422016.N().S(`
-      <footer class="flex justify-center w-screen bottom-0 pt-12 backdrop-blur">
+      <footer class="flex flex-col items-center justify-center w-screen bottom-0 pt-12 backdrop-blur">
         <p>Copyright (C) `)
-//line ../templates/basepage.qtpl:35
+//line ../templates/basepage.qtpl:40
 	qw422016.N().D(time.Now().Year())
-//line ../templates/basepage.qtpl:35
-	qw422016.N().S(` xyno (Philipp Hochkamp)
+//line ../templates/basepage.qtpl:40
+	qw422016.N().S(` xyno (Philipp Hochkamp)</p>
+        <p>
+          <a class="pr-4" href="/impressum-de">Impressum</a>
+          <a href="/datenschutz-de">Datenschutzerklärung</a>
+        </p>
       </footer>
     </body>
 </html>
 `)
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 }
 
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 func WritePageTemplate(qq422016 qtio422016.Writer, p Page) {
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 	StreamPageTemplate(qw422016, p)
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 	qt422016.ReleaseWriter(qw422016)
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 }
 
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 func PageTemplate(p Page) string {
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 	WritePageTemplate(qb422016, p)
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 	qs422016 := string(qb422016.B)
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 	return qs422016
-//line ../templates/basepage.qtpl:39
+//line ../templates/basepage.qtpl:48
 }

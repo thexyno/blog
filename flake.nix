@@ -39,6 +39,9 @@
             src = ./.;
             nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper ];
 
+            checkPhase = ''
+              ${pkgs.go_1_18}/bin/go vet ./...
+            '';
             postBuild = ''
               ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/main.css -o $out/share/xynoblog/cssdist/output.css --minify
             '';

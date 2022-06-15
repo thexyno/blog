@@ -10,9 +10,9 @@ type IndexPage struct {
 %}
 
 
-{% func (p *IndexPage) Title() %}
-	xynos space
-{% endfunc %}
+{% func (p *IndexPage) Title() %}xynos space{% endfunc %}
+{% func (p *IndexPage) Description() %}A Blog about Software Engineering, Hardware, NixOS, and more{% endfunc %}
+{% func (p *IndexPage) Head() %}{% endfunc %}
 
 
 {% func (p *IndexPage) Body() %}
@@ -42,6 +42,7 @@ type IndexPage struct {
         <li><a target="_blank" href="https://github.com/thexyno">GitHub - thexyno</a></li>
         <li><a rel="me" target="_blank" href="https://matrix.to/#/@me:ragon.xyz">Matrix - @me:ragon.xyz</a></li>
         <li><a rel="me" target="_blank" href="https://chaos.social/@xyno">Mastodon - @xyno@chaos.social</a></li>
+        <li><a rel="me" target="_blank" href="https://twitter.com/thexyn0">Twitter - @thexyn0</a></li>
       </ul>
 	  </div>
 	<h3 class="pt-4 text-xl font-semibold">Latest Posts:</h3>

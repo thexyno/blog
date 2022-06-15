@@ -25,29 +25,91 @@ type ErrorPage struct {
 //line ../templates/error.qtpl:7
 func (p *ErrorPage) StreamTitle(qw422016 *qt422016.Writer) {
 //line ../templates/error.qtpl:7
-	qw422016.N().S(`
-	Error - Xynos Space
-`)
+	qw422016.N().S(`Error - xynos space`)
+//line ../templates/error.qtpl:7
+}
+
+//line ../templates/error.qtpl:7
+func (p *ErrorPage) WriteTitle(qq422016 qtio422016.Writer) {
+//line ../templates/error.qtpl:7
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line ../templates/error.qtpl:7
+	p.StreamTitle(qw422016)
+//line ../templates/error.qtpl:7
+	qt422016.ReleaseWriter(qw422016)
+//line ../templates/error.qtpl:7
+}
+
+//line ../templates/error.qtpl:7
+func (p *ErrorPage) Title() string {
+//line ../templates/error.qtpl:7
+	qb422016 := qt422016.AcquireByteBuffer()
+//line ../templates/error.qtpl:7
+	p.WriteTitle(qb422016)
+//line ../templates/error.qtpl:7
+	qs422016 := string(qb422016.B)
+//line ../templates/error.qtpl:7
+	qt422016.ReleaseByteBuffer(qb422016)
+//line ../templates/error.qtpl:7
+	return qs422016
+//line ../templates/error.qtpl:7
+}
+
+//line ../templates/error.qtpl:8
+func (p *ErrorPage) StreamDescription(qw422016 *qt422016.Writer) {
+//line ../templates/error.qtpl:8
+	qw422016.N().S(`Error`)
+//line ../templates/error.qtpl:8
+}
+
+//line ../templates/error.qtpl:8
+func (p *ErrorPage) WriteDescription(qq422016 qtio422016.Writer) {
+//line ../templates/error.qtpl:8
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line ../templates/error.qtpl:8
+	p.StreamDescription(qw422016)
+//line ../templates/error.qtpl:8
+	qt422016.ReleaseWriter(qw422016)
+//line ../templates/error.qtpl:8
+}
+
+//line ../templates/error.qtpl:8
+func (p *ErrorPage) Description() string {
+//line ../templates/error.qtpl:8
+	qb422016 := qt422016.AcquireByteBuffer()
+//line ../templates/error.qtpl:8
+	p.WriteDescription(qb422016)
+//line ../templates/error.qtpl:8
+	qs422016 := string(qb422016.B)
+//line ../templates/error.qtpl:8
+	qt422016.ReleaseByteBuffer(qb422016)
+//line ../templates/error.qtpl:8
+	return qs422016
+//line ../templates/error.qtpl:8
+}
+
+//line ../templates/error.qtpl:9
+func (p *ErrorPage) StreamHead(qw422016 *qt422016.Writer) {
 //line ../templates/error.qtpl:9
 }
 
 //line ../templates/error.qtpl:9
-func (p *ErrorPage) WriteTitle(qq422016 qtio422016.Writer) {
+func (p *ErrorPage) WriteHead(qq422016 qtio422016.Writer) {
 //line ../templates/error.qtpl:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line ../templates/error.qtpl:9
-	p.StreamTitle(qw422016)
+	p.StreamHead(qw422016)
 //line ../templates/error.qtpl:9
 	qt422016.ReleaseWriter(qw422016)
 //line ../templates/error.qtpl:9
 }
 
 //line ../templates/error.qtpl:9
-func (p *ErrorPage) Title() string {
+func (p *ErrorPage) Head() string {
 //line ../templates/error.qtpl:9
 	qb422016 := qt422016.AcquireByteBuffer()
 //line ../templates/error.qtpl:9
-	p.WriteTitle(qb422016)
+	p.WriteHead(qb422016)
 //line ../templates/error.qtpl:9
 	qs422016 := string(qb422016.B)
 //line ../templates/error.qtpl:9
@@ -57,44 +119,44 @@ func (p *ErrorPage) Title() string {
 //line ../templates/error.qtpl:9
 }
 
-//line ../templates/error.qtpl:12
+//line ../templates/error.qtpl:13
 func (p *ErrorPage) StreamBody(qw422016 *qt422016.Writer) {
-//line ../templates/error.qtpl:12
+//line ../templates/error.qtpl:13
 	qw422016.N().S(`
       <div class="flex flex-col justify-center items-center content-center">
       	<h1>`)
-//line ../templates/error.qtpl:14
+//line ../templates/error.qtpl:15
 	qw422016.E().S(p.Message)
-//line ../templates/error.qtpl:14
+//line ../templates/error.qtpl:15
 	qw422016.N().S(`</h1>
       	<a href="/">Click Here to get back to the main page</a>
       </div>
 `)
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 }
 
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 func (p *ErrorPage) WriteBody(qq422016 qtio422016.Writer) {
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 	p.StreamBody(qw422016)
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 	qt422016.ReleaseWriter(qw422016)
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 }
 
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 func (p *ErrorPage) Body() string {
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 	qb422016 := qt422016.AcquireByteBuffer()
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 	p.WriteBody(qb422016)
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 	qs422016 := string(qb422016.B)
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 	qt422016.ReleaseByteBuffer(qb422016)
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 	return qs422016
-//line ../templates/error.qtpl:17
+//line ../templates/error.qtpl:18
 }
