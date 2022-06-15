@@ -24,7 +24,58 @@
 
     in
     {
+      nixosModule = { config, optinos, lib, pkgs, ... }:
+        let
+          cfg = config.services.xynoblog;
+          xb = self.packages.${pkgs.system}.xynoblog;
+        in
+        with lib;
+        {
+          options.services.xynoblog = {
+            enable = mkOption {
+              type = types.bool;
+              default = false;
+              description = "wether to enable the xynoblog blog engine";
+            };
+            listen = mkOption {
+              type = types.str;
+              default = ":8392";
+              description = "the domain/post xynoblog listens on";
+            };
+            stateDirectory = mkOption {
+              type = types.str;
+              default = "xynoblog";
+              description = "dir to store the sqlite3 database (relative to /var/lib)";
+            };
 
+          };
+          config = mkIf cfg.enable {
+            users.users.xynoblog = {
+              group = "xynoblog";
+              isSystemUser = true;
+            };
+            users.groups.xynoblog = { };
+
+            environment.systemPackages = [ xb ];
+
+            systemd.services.xynoblog = {
+              description = "xynoblog blog engine";
+              after = [ "network.target" ];
+              wantedBy = [ "multi-user.target" ];
+              serviceConfig = {
+                User = "xynoblog";
+                Group = "xynoblog";
+                PrivateTmp = "true";
+                PrivateDevices = "true";
+                ProtectHome = "true";
+                ProtectSystem = "strict";
+                AmbientCapabilities = "CAP_NET_BIND_SERVICE";
+                ExecStart = "${xb}/bin/xynoblog serve --db /var/lib/${cfg.stateDirectory}/blog.db";
+                StateDirectory = cfg.stateDirectory;
+              };
+            };
+          };
+        };
       # Provide some binary packages for selected system types.
       packages = forAllSystems (system:
         let
