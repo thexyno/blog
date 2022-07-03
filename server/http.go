@@ -5,8 +5,8 @@ package server
 import (
 	"io/ioutil"
 	"net/http"
-	"time"
 	"strings"
+	"time"
 
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
@@ -79,7 +79,9 @@ func renderPost(db db.DbConn) func(*gin.Context) {
 			renderError(c, err)
 			return
 		}
-		c.Header("Last-Modified", post.Updated.Format(http.TimeFormat))
+		if !gin.IsDebugging() {
+			c.Header("Last-Modified", post.Updated.Format(http.TimeFormat))
+		}
 		rendered := Render([]byte(post.Content))
 		p := &templates.PostPage{
 			Post:            post,
@@ -106,10 +108,15 @@ func renderSimpleMarkdownPage(title []byte, content []byte, index bool) func(*gi
 func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string) *gin.Engine {
 	r := gin.New()
 	log := log.New()
+
 	store := persistence.NewInMemoryStore(300 * time.Second)
+	if !gin.IsDebugging() {
+		r.Use(cacheControl)
+	} else {
+		store = persistence.NewInMemoryStore(time.Millisecond)
+		r.Use(Logger(log))
+	}
 	r.Use(gin.Recovery())
-	r.Use(cacheControl)
-	r.Use(Logger(log))
 	r.GET("/", cache.CachePage(store, 5*time.Minute, renderIndex(db)))
 	r.GET("/posts", cache.CachePage(store, 5*time.Minute, renderPosts(db)))
 	r.HEAD("/", cache.CachePage(store, 5*time.Minute, renderIndex(db)))
@@ -134,14 +141,14 @@ func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string) *gin.Eng
 
 	r.Static("/css", cssdir)
 	r.Static("/fonts", fontdir)
-	r.StaticFile("/favicon.ico", staticdir + "/data/favicon.ico")
-	r.StaticFile("/robots.txt", staticdir + "/data/robots.txt")
+	r.StaticFile("/favicon.ico", staticdir+"/data/favicon.ico")
+	r.StaticFile("/robots.txt", staticdir+"/data/robots.txt")
 
 	return r
 }
 
 func hasSuffixes(str string, suff []string) bool {
-	for _,v := range suff {
+	for _, v := range suff {
 		if strings.HasSuffix(str, v) {
 			return true
 		}

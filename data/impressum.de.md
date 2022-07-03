@@ -12,7 +12,7 @@ Stuttgarter Str. 106
 
 Telefon: +491579-2613071
 
-E-Mail: blog@xyno.space
+E-Mail: impressum@xyno.space
 
 ## Haftungsausschluss:
 

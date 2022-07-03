@@ -57,7 +57,7 @@ type mdheader struct {
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a post",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, arg := range args {
 			filepath.Walk(arg, func(path string, info os.FileInfo, err error) error {
@@ -79,6 +79,11 @@ var addCmd = &cobra.Command{
 					mdRest := strings.Join(mdsplit[2:], "")
 					server.Render([]byte(mdRest)) // Panics when md is broken
 					dbc := db.NewDb(viper.GetString(dbURIKey))
+
+					if err := dbc.Seed(); err != nil {
+						log.Error(err)
+						return err
+					}
 					if err := dbc.Add(db.Post{
 						Title:   header.Title,
 						Id:      db.PostId(header.Id),

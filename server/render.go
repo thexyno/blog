@@ -19,7 +19,14 @@ func renderCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus,
 		return ast.GoToNext, false
 	}
 
-	lexer := lexers.Get(string(n.Info))
+	var language string
+	if n.Info == nil {
+		language = "bash"
+	} else {
+		language = string(n.Info)
+	}
+
+	lexer := lexers.Get(language)
 	formatter := chromahtml.New(chromahtml.WithClasses(true))
 	tokens, err := lexer.Tokenise(nil, string(n.Literal))
 	style := styles.Get("gruvbox")

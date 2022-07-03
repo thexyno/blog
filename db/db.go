@@ -39,6 +39,7 @@ var (
 )
 
 func NewDb(uri string) DbConn {
+	log.Infof("dbpath is %v", uri)
 	db, err := sql.Open("sqlite3", uri)
 	if err != nil {
 		log.Fatal(err)
@@ -51,6 +52,7 @@ func (conn *DbConn) Close() error {
 }
 
 func (conn *DbConn) Seed() error {
+	log.Info("seeding db")
 	stmt := `
 create table if not exists posts (id text primary key not null, title text not null, content text not null, created datetime not null, updated datetime not null, tags text not null);
 `

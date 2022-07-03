@@ -1,6 +1,6 @@
-## Datenschutzerklärung
+# Datenschutzerklärung
 
-1. Datenschutz auf einen Blick
+## 1. Datenschutz auf einen Blick
 
 ### Allgemeine Hinweise
 
@@ -52,20 +52,7 @@ Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu
 verlangen. Details hierzu entnehmen Sie der Datenschutzerklärung unter
 „Recht auf Einschränkung der Verarbeitung".
 
-### Analyse-Tools und Tools von Drittanbietern
-
-Beim Besuch unserer Website kann Ihr Surf-Verhalten statistisch
-ausgewertet werden. Das geschieht vor allem mit Cookies und mit
-sogenannten Analyseprogrammen. Die Analyse Ihres Surf-Verhaltens erfolgt
-in der Regel anonym; das Surf-Verhalten kann nicht zu Ihnen
-zurückverfolgt werden.
-
-Sie können dieser Analyse widersprechen oder sie durch die
-Nichtbenutzung bestimmter Tools verhindern. Detaillierte Informationen
-zu diesen Tools und über Ihre Widerspruchsmöglichkeiten finden Sie in
-der folgenden Datenschutzerklärung.
-
-2. Allgemeine Hinweise und Pflichtinformationen
+## 2. Allgemeine Hinweise und Pflichtinformationen
 
 ### Datenschutz
 
@@ -96,7 +83,7 @@ Stuttgarter Str. 106\
 70736 Fellbach
 
 Telefon: +491579-2613071\
-E-Mail: blog@xyno.space
+E-Mail: datenschutz@xyno.space
 
 Verantwortliche Stelle ist die natürliche oder juristische Person, die
 allein oder gemeinsam mit anderen über die Zwecke und Mittel der
@@ -218,38 +205,7 @@ Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im
 Falle der unverlangten Zusendung von Werbeinformationen, etwa durch
 Spam-E-Mails, vor.
 
-3. Datenerfassung auf unserer Website
-
-### Cookies
-
-Die Internetseiten verwenden teilweise so genannte Cookies. Cookies
-richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren.
-Cookies dienen dazu, unser Angebot nutzerfreundlicher, effektiver und
-sicherer zu machen. Cookies sind kleine Textdateien, die auf Ihrem
-Rechner abgelegt werden und die Ihr Browser speichert.
-
-Die meisten der von uns verwendeten Cookies sind so genannte
-„Session-Cookies". Sie werden nach Ende Ihres Besuchs automatisch
-gelöscht. Andere Cookies bleiben auf Ihrem Endgerät gespeichert bis Sie
-diese löschen. Diese Cookies ermöglichen es uns, Ihren Browser beim
-nächsten Besuch wiederzuerkennen.
-
-Sie können Ihren Browser so einstellen, dass Sie über das Setzen von
-Cookies informiert werden und Cookies nur im Einzelfall erlauben, die
-Annahme von Cookies für bestimmte Fälle oder generell ausschließen sowie
-das automatische Löschen der Cookies beim Schließen des Browser
-aktivieren. Bei der Deaktivierung von Cookies kann die Funktionalität
-dieser Website eingeschränkt sein.
-
-Cookies, die zur Durchführung des elektronischen Kommunikationsvorgangs
-oder zur Bereitstellung bestimmter, von Ihnen erwünschter Funktionen
-(z. B. Warenkorbfunktion) erforderlich sind, werden auf Grundlage von
-Art. 6 Abs. 1 lit. f DSGVO gespeichert. Der Websitebetreiber hat ein
-berechtigtes Interesse an der Speicherung von Cookies zur technisch
-fehlerfreien und optimierten Bereitstellung seiner Dienste. Soweit
-andere Cookies (z. B. Cookies zur Analyse Ihres Surfverhaltens)
-gespeichert werden, werden diese in dieser Datenschutzerklärung
-gesondert behandelt.
+## 3. Datenerfassung auf unserer Website
 
 ### Server-Log-Dateien
 
@@ -262,7 +218,7 @@ in so genannten Server-Log-Dateien, die Ihr Browser automatisch an uns
 -   Referrer URL
 -   Hostname des zugreifenden Rechners
 -   Uhrzeit der Serveranfrage
--   IP-Adresse
+-   Annonymisierte IP-Adresse
 
 Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht
 vorgenommen.
@@ -296,37 +252,5 @@ Speicherung widerrufen oder der Zweck für die Datenspeicherung entfällt
 gesetzliche Bestimmungen -- insbesondere gesetzliche
 Aufbewahrungsfristen -- bleiben unberührt.
 
-4. Plugins und Tools
-
-### YouTube
-
-Unsere Website nutzt Plugins der von Google betriebenen Seite YouTube.
-Betreiber der Seiten ist die Google Ireland Limited („Google"), Gordon
-House, Barrow Street, Dublin 4, Irland.
-
-Wenn Sie eine unserer mit einem YouTube-Plugin ausgestatteten Seiten
-besuchen, wird eine Verbindung zu den Servern von YouTube hergestellt.
-Dabei wird dem YouTube-Server mitgeteilt, welche unserer Seiten Sie
-besucht haben.
-
-Des Weiteren kann Youtube verschiedene Cookies auf Ihrem Endgerät
-speichern. Mit Hilfe dieser Cookies kann Youtube Informationen über
-Besucher unserer Website erhalten. Diese Informationen werden u. a.
-verwendet, um Videostatistiken zu erfassen, die Anwenderfreundlichkeit
-zu verbessern und Betrugsversuchen vorzubeugen. Die Cookies verbleiben
-auf Ihrem Endgerät, bis Sie sie löschen.
-
-Wenn Sie in Ihrem YouTube-Account eingeloggt sind, ermöglichen Sie
-YouTube, Ihr Surfverhalten direkt Ihrem persönlichen Profil zuzuordnen.
-Dies können Sie verhindern, indem Sie sich aus Ihrem YouTube-Account
-ausloggen.
-
-Die Nutzung von YouTube erfolgt im Interesse einer ansprechenden
-Darstellung unserer Online-Angebote. Dies stellt ein berechtigtes
-Interesse im Sinne von Art. 6 Abs. 1 lit. f DSGVO dar.
-
-Weitere Informationen zum Umgang mit Nutzerdaten finden Sie in der
-Datenschutzerklärung von YouTube unter:
-<https://policies.google.com/privacy?hl=de>.
 
 Quelle: <https://www.e-recht24.de>

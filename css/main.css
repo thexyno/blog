@@ -9,22 +9,22 @@
 
 @layer base {
     html {
-        @apply font-mono dark:bg-dark0 bg-light0 text-dark0 dark:text-light0
+        @apply font-mono dark:bg-dark0 bg-light0 text-dark0 dark:text-light0 text-sm leading-relaxed
     }
     a {
         @apply text-neutral_yellow hover:text-bright_yellow visited:text-faded_yellow
     }
     h1 {
-        @apply py-2 font-semibold text-2xl text-dark1 dark:text-light1
+        @apply py-3 font-semibold text-2xl text-dark1 dark:text-light1
     }
     h2 {
-        @apply py-1 font-semibold text-xl text-dark2 dark:text-light2
+        @apply py-2 pt-1 font-semibold text-xl text-bright_orange
     }
     h3 {
-        @apply py-1 font-semibold text-lg text-dark3 dark:text-light3
+        @apply pt-3 font-semibold text-lg text-bright_orange
     }
     ul li {
-      @apply mx-10
+      @apply mx-7
     }
     ul {
         @apply list-disc
@@ -35,9 +35,20 @@
     ol li {
       @apply mx-10
     }
+    blockquote {
+      @apply px-4 py-2 my-2 dark:text-light3 text-dark3 border-l-2 dark:border-light3 border-dark3
+    }
+    p {
+      @apply pt-1
+    }
+    hr {
+      @apply my-2
+    }
+    code { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 p-0.5 }
 }
 
-    /* Background */ .chroma { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 px-4 py-4 }
+    .chroma code { width: 0; height: 0; margin: 0; padding: 0; } /* Created by the code formatter, but i don't want it */
+    /* Background */ .chroma { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 px-2 py-2 my-2 }
     /* Error */ .chroma .err { color: #ff0000 }
     /* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
     /* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
