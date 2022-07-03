@@ -1,5 +1,3 @@
 User-Agent: *
-Disallow: /css/
-Disallow: /fonts/
 Disallow: /impressum-*
 Disallow: /datenschutz-*

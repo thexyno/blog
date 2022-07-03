@@ -82,49 +82,59 @@
           pkgs = nixpkgsFor.${system};
         in
         {
-          xynoblog = pkgs.buildGo118Module rec {
-            pname = "xynoblog";
-            inherit version;
-            # In 'nix develop', we don't need a copy of the source tree
-            # in the Nix store.
-            src = ./.;
-            nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper ];
+          xynoblog =
+            let
+              css = pkgs.runCommand "xynoblog-css" { src = ./.; } ''
+                cd $src
+                mkdir $out
+                ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/main.css -o $out/output.css --minify
+                cp $out/output.css $out/$(sha256sum $out/output.css | awk '{print($1)}').css
+                echo $(sha256sum $out/output.css | awk '{print($1)}').css > $out/sha
+                rm $out/output.css
+              '';
+              csssha = builtins.readFile "${css}/sha";
+            in
+            pkgs.buildGo118Module rec {
+              pname = "xynoblog";
+              inherit version;
+              # In 'nix develop', we don't need a copy of the source tree
+              # in the Nix store.
+              src = ./.;
+              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper ];
 
-            checkPhase = ''
-              ${pkgs.go_1_18}/bin/go vet ./...
-            '';
-            postBuild = ''
-              mkdir -p $out/share/xynoblog
-              cp -r ./data $out/share/xynoblog/data
-              ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/main.css -o $out/share/xynoblog/cssdist/output.css --minify
-            '';
-            preFixup = ''
-              wrapProgram $out/bin/xynoblog \
-                --prefix XYNOBLOG_FONTDIR : "${pkgs.jetbrains-mono}/share/fonts/truetype" \
-                --prefix XYNOBLOG_CSSDIR : "$out/share/xynoblog/cssdist" \
-                --prefix XYNOBLOG_STATICDIR : "$out/share/xynoblog" \
-                --prefix GIN_MODE : "release" \
-                --prefix XYNOBLOG_RELEASEMODE : "true"
-            '';
-            postInstall = ''
-              installShellCompletion --cmd ${pname} \
-                --bash <($out/bin/${pname} completion bash) \
-                --fish <($out/bin/${pname} completion fish) \
-                --zsh  <($out/bin/${pname} completion zsh)
-            '';
+              ldflags = [
+                "-X \"github.com/thexyno/xynoblog/statics.CSSFile=${csssha}\""
+              ];
 
-            # This hash locks the dependencies of this package. It is
-            # necessary because of how Go requires network access to resolve
-            # VCS.  See https://www.tweag.io/blog/2021-03-04-gomod2nix/ for
-            # details. Normally one can build with a fake sha256 and rely on native Go
-            # mechanisms to tell you what the hash should be or determine what
-            # it should be "out-of-band" with other tooling (eg. gomod2nix).
-            # To begin with it is recommended to set this, but one must
-            # remeber to bump this hash when your dependencies change.
-            #vendorSha256 = pkgs.lib.fakeSha256;
+              preFixup = ''
+                wrapProgram $out/bin/xynoblog \
+                  --prefix XYNOBLOG_FONTDIR : "${pkgs.jetbrains-mono}/share/fonts/truetype" \
+                  --prefix XYNOBLOG_CSSDIR : "${css}" \
+                  --prefix XYNOBLOG_STATICDIR : "$out/share/xynoblog" \
+                  --prefix GIN_MODE : "release" \
+                  --prefix XYNOBLOG_RELEASEMODE : "true"
+              '';
+              postInstall = ''
+                mkdir -p $out/share/xynoblog
+                cp -r ./data $out/share/xynoblog/data
+                installShellCompletion --cmd ${pname} \
+                  --bash <($out/bin/${pname} completion bash) \
+                  --fish <($out/bin/${pname} completion fish) \
+                  --zsh  <($out/bin/${pname} completion zsh)
+              '';
 
-            vendorSha256 = "sha256-iDEkecNDNGhg2DKhGstnWBQ/skcpXUOcix5lGzocOac=";
-          };
+              # This hash locks the dependencies of this package. It is
+              # necessary because of how Go requires network access to resolve
+              # VCS.  See https://www.tweag.io/blog/2021-03-04-gomod2nix/ for
+              # details. Normally one can build with a fake sha256 and rely on native Go
+              # mechanisms to tell you what the hash should be or determine what
+              # it should be "out-of-band" with other tooling (eg. gomod2nix).
+              # To begin with it is recommended to set this, but one must
+              # remeber to bump this hash when your dependencies change.
+              # vendorSha256 = pkgs.lib.fakeSha256;
+
+              vendorSha256 = "sha256-R2ZqaSvm8I5alwV06h5Z7n1e0EUE7ugJrQhUvtfycI4=";
+            };
         });
 
       # The default package for 'nix build'. This makes sense if the

@@ -11,6 +11,9 @@
     html {
         @apply font-mono dark:bg-dark0 bg-light0 text-dark0 dark:text-light0 text-sm leading-relaxed
     }
+    article {
+        @apply px-1
+    }
     a {
         @apply text-neutral_yellow hover:text-bright_yellow visited:text-faded_yellow
     }
@@ -48,7 +51,7 @@
 }
 
     .chroma code { width: 0; height: 0; margin: 0; padding: 0; } /* Created by the code formatter, but i don't want it */
-    /* Background */ .chroma { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 px-2 py-2 my-2 }
+    /* Background */ .chroma { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 px-2 py-2 my-2 overflow-x-auto max-w-full }
     /* Error */ .chroma .err { color: #ff0000 }
     /* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
     /* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
