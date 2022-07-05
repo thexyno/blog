@@ -131,13 +131,8 @@ func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string) *gin.Eng
 	if err != nil {
 		log.Panic(err)
 	}
-	datenschutzDE, err := ioutil.ReadFile(staticdir + "/data/datenschutz.de.md")
-	if err != nil {
-		log.Panic(err)
-	}
 
 	r.GET("/impressum-de", renderSimpleMarkdownPage([]byte("Impressum"), impressumDE, false))
-	r.GET("/datenschutz-de", renderSimpleMarkdownPage([]byte("Datenschutzerklärung"), datenschutzDE, false))
 
 	r.Static("/css", cssdir)
 	r.Static("/fonts", fontdir)

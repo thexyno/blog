@@ -36,8 +36,7 @@ Page {
       <footer class="flex flex-col items-center justify-center bottom-0 pt-12 backdrop-blur">
         <p>Copyright (C) {%d time.Now().Year() %} xyno (Philipp Hochkamp)</p>
         <p>
-          <a class="pr-4" href="/impressum-de">Impressum</a>
-          <a href="/datenschutz-de">Datenschutzerklärung</a>
+          <a href="/impressum-de">Impressum</a>
         </p>
       </footer>
     </body>
