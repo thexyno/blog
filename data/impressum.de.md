@@ -2,11 +2,11 @@
 
 Philipp Hochkamp
 
-c/o Block Services
+c/o devsaur UG (haftungsbeschränkt)
 
-Stuttgarter Str. 106
+Martin-Schmeißer-Weg 12a
 
-70736 Fellbach
+44227 Dortmund
 
 ### Kontakt:
 
