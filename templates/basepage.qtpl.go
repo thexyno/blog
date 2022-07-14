@@ -100,38 +100,37 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 //line ../templates/basepage.qtpl:37
 	qw422016.N().S(` xyno (Philipp Hochkamp)</p>
         <p>
-          <a class="pr-4" href="/impressum-de">Impressum</a>
-          <a href="/datenschutz-de">Datenschutzerklärung</a>
+          <a href="/impressum-de">Impressum</a>
         </p>
       </footer>
     </body>
 </html>
 `)
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 }
 
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 func WritePageTemplate(qq422016 qtio422016.Writer, p Page) {
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 	StreamPageTemplate(qw422016, p)
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 	qt422016.ReleaseWriter(qw422016)
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 }
 
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 func PageTemplate(p Page) string {
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 	WritePageTemplate(qb422016, p)
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 	qs422016 := string(qb422016.B)
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 	return qs422016
-//line ../templates/basepage.qtpl:45
+//line ../templates/basepage.qtpl:44
 }
