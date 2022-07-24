@@ -12,17 +12,22 @@ type IndexPage struct {
 
 {% func (p *IndexPage) Title() %}xynos space{% endfunc %}
 {% func (p *IndexPage) Description() %}A Blog about Software Engineering, Hardware, NixOS, and more{% endfunc %}
-{% func (p *IndexPage) Head() %}{% endfunc %}
+{% func (p *IndexPage) Head() %}
+<link rel="alternate" title="Feed" type="application/feed+json" href="https://xyno.space/posts.json" />
+<link rel="alternate" title="Feed" type="application/rss+xml" href="https://xyno.space/posts.rss" />
+<link rel="alternate" title="Feed" type="application/rss+atom" href="https://xyno.space/posts.atom" />
+{% endfunc %}
 
 
 {% func (p *IndexPage) Body() %}
 	<div class="mx-auto container max-w-6xl">
     <h1 class="pt-8 font-bold">xyno</h1>
-    <h3 class="px-4 text-xl text-dark1 dark:text-light1">Full Stack Engineer</h3>
+    <h3 class="px-4 text-xl text-dark1 dark:text-light1">✨ Full Stack Developer ✨</h3>
     <h3 class="text-xl">Skills:</h3>
     <div class="px-8">
       <ul>
         <li>Go</li>
+        <li>Dart/Flutter</li>
         <li>Typescript/Javascript</li>
       </ul>
       <ul class="px-4">
@@ -31,6 +36,7 @@ type IndexPage struct {
       </ul>
       <ul>
         <li>Kubernetes</li>
+        <li>Docker</li>
         <li>Terraform</li>
         <li>Nix/NixOS</li>
         <li>GitLab CI</li>

@@ -149,7 +149,7 @@ func (conn *DbConn) PostIds() ([]PostId, []time.Time, error) {
 
 // returns posts with only textLength chars of post text and no duration
 // limit = -1 returns all
-func (conn *DbConn) ShortPosts(textLength uint, limit int, skip uint) ([]Post, error) {
+func (conn *DbConn) ShortPosts(textLength int, limit int, skip uint) ([]Post, error) {
 	rows, err := conn.db.Query(string(shortPostStmt), textLength, limit, skip)
 	if err != nil {
 		return []Post{}, err

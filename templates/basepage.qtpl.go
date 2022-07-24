@@ -84,7 +84,7 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 	qw422016.N().S(`
     </head>
     <body>
-      <header class="top-0 z-40 w-full flex-none max-w-8xl mx-auto py-4 lg:px-8 mx-8 relative flex items-center">
+      <header class="top-0 z-40 w-full flex-none max-w-8xl mx-auto py-4 px-8 relative flex items-center">
         <a class="pr-8 mr-3 text-2xl flex-none text-neutral_orange visited:text-neutral_orange hover:text-bright_orange font-semibold overflow-hidden md:w-auto" href="/">xynos space</a>
         <a class="mr-3 text-xl flex-none font-semibold overflow-hidden md:w-auto" href="/posts">Blog</a>
       </header>
