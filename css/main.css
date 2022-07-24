@@ -39,7 +39,18 @@
       @apply mx-10
     }
     blockquote {
-      @apply px-4 py-2 my-2 dark:text-light3 text-dark3 border-l-2 dark:border-light3 border-dark3
+      @apply px-5
+             py-2
+             my-2
+             dark:text-light3
+             text-dark3
+             border-2
+             dark:border-light3
+             border-dark3
+             before:dark:text-light0
+             before:text-dark0
+             before:content-['tangent']
+             before:-mx-2
     }
     p {
       @apply pt-1

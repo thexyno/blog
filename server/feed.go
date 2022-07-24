@@ -11,7 +11,7 @@ import (
 )
 
 func generateFeed(dbc db.DbConn) (*feeds.Feed, error) {
-	sposts, err := dbc.ShortPosts(200, -1, 0)
+	sposts, err := dbc.ShortPosts(100000000, -1, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func generateFeed(dbc db.DbConn) (*feeds.Feed, error) {
 	return &feeds.Feed{
 		Title:       "xyno - Blog",
 		Link:        &feeds.Link{Href: "https://xyno.space"},
-		Description: "posts about tech n stuff",
+		Description: "A Blog about Software Engineering, Hardware, NixOS, and more",
 		Author:      &feeds.Author{Name: "xyno", Email: "blog@xyno.space"},
 		Updated:     newest,
 		Copyright:   fmt.Sprint("(c) ", time.Now().Year(), " xyno (Philipp Hochkamp)"),
@@ -59,9 +59,8 @@ func renderRSS(db db.DbConn) func(c *gin.Context) {
 			renderISE(c, err)
 			return
 		}
-
 		c.Writer.Header().Add("Content-Type", "application/rss+xml")
-		fmt.Fprint(c.Writer, feedrss)
+		c.Writer.WriteString(feedrss)
 	}
 }
 
@@ -78,7 +77,7 @@ func renderAtom(db db.DbConn) func(c *gin.Context) {
 			return
 		}
 		c.Writer.Header().Add("Content-Type", "application/atom+xml")
-		fmt.Fprint(c.Writer, feedatom)
+		c.Writer.WriteString(feedatom)
 	}
 }
 
@@ -95,6 +94,6 @@ func renderJSONFeed(db db.DbConn) func(c *gin.Context) {
 			return
 		}
 		c.Writer.Header().Add("Content-Type", "application/feed+json")
-		fmt.Fprint(c.Writer, feedjsonfeed)
+		c.Writer.WriteString(feedjsonfeed)
 	}
 }
