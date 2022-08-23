@@ -3,17 +3,13 @@
 package server
 
 import (
-	"io/ioutil"
-	"net/http"
-	"strings"
-	"time"
-
-	"github.com/gin-contrib/cache"
-	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/thexyno/xynoblog/db"
 	"github.com/thexyno/xynoblog/templates"
+	"io/ioutil"
+	"net/http"
+	"strings"
 )
 
 func renderError(c *gin.Context, err error) {
@@ -109,24 +105,22 @@ func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string) *gin.Eng
 	r := gin.New()
 	log := log.New()
 
-	store := persistence.NewInMemoryStore(300 * time.Second)
 	if !gin.IsDebugging() {
 		r.Use(cacheControl)
 	} else {
-		store = persistence.NewInMemoryStore(time.Millisecond)
 		r.Use(Logger(log))
 	}
 	r.Use(gin.Recovery())
-	r.GET("/", cache.CachePage(store, 5*time.Minute, renderIndex(db)))
-	r.GET("/posts", cache.CachePage(store, 5*time.Minute, renderPosts(db)))
-	r.HEAD("/", cache.CachePage(store, 5*time.Minute, renderIndex(db)))
-	r.HEAD("/posts", cache.CachePage(store, 5*time.Minute, renderPosts(db)))
-	r.GET("/posts.rss", cache.CachePage(store, 5*time.Minute, renderRSS(db)))
-	r.GET("/posts.atom", cache.CachePage(store, 5*time.Minute, renderAtom(db)))
-	r.GET("/posts.json", cache.CachePage(store, 5*time.Minute, renderJSONFeed(db)))
-	r.GET("/sitemap.xml", cache.CachePage(store, 5*time.Minute, renderSitemap(db)))
-	r.GET("/post/:id", cache.CachePage(store, 5*time.Minute, renderPost(db)))
-	r.HEAD("/post/:id", cache.CachePage(store, 5*time.Minute, renderPost(db)))
+	r.GET("/", renderIndex(db))
+	r.GET("/posts", renderPosts(db))
+	r.HEAD("/", renderIndex(db))
+	r.HEAD("/posts", renderPosts(db))
+	r.GET("/posts.rss", renderRSS(db))
+	r.GET("/posts.atom", renderAtom(db))
+	r.GET("/posts.json", renderJSONFeed(db))
+	r.GET("/sitemap.xml", renderSitemap(db))
+	r.GET("/post/:id", renderPost(db))
+	r.HEAD("/post/:id", renderPost(db))
 	impressumDE, err := ioutil.ReadFile(staticdir + "/data/impressum.de.md")
 	if err != nil {
 		log.Panic(err)
