@@ -87,7 +87,7 @@ der [Kanzlei Hasselbach, Rechtsanwälte für Arbeitsrecht und
 Familienrecht](https://www.kanzlei-hasselbach.de/)
 
 
-### Datenschutzerklärung
+## Datenschutzerklärung
 
 Im Folgenden möchten wir Sie aufklären, wie Ihre Daten von uns verarbeitet werden.
 Verantwortlich im Sinne der DSGVO
@@ -107,7 +107,7 @@ Ihre E-Mail-Adresse
 Ihre Telefonnummer 
 Wir werden die Daten löschen, sobald die Speicherung nicht mehr erforderlich ist oder die Verarbeitung einschränken, falls gesetzliche Aufbewahrungspflichten bestehen.
 
-#### Betroffenenrechte
+### Betroffenenrechte
 
 Sie haben als betroffene Person, das Recht auf Auskunft, das Recht auf Berichtigung oder Löschung, das Recht auf Einschränkung der Verarbeitung und das Recht auf Widerspruch gegen die Verarbeitung Ihrer Daten. Sofern Sie uns eine Einwilligung erteilt haben, können Sie diese jederzeit mit Wirkung für die Zukunft widerrufen. 
 Bitte richten Sie Ihren Widerspruch formlos an die oben genannte Adresse.
@@ -116,7 +116,7 @@ Darüber hinaus haben Sie das Recht auf Datenübertragbarkeit.
 Sie haben weiter das Recht, sich bei einer Aufsichtsbehörde über die Verarbeitung zu beschweren. 
 Eine Liste der entsprechenden Behörden finden Sie hier.
 
-#### Hosting
+### Hosting
 
 Wir erheben in sogenannten Logfiles folgende Daten, die Ihr Browser übermittelt: 
 IP-Adresse, Datum und Uhrzeit der Anfrage, Zeitzonendifferenz zur Greenwich Mean Time, Inhalt der Anforderung, HTTP-Statuscode, übertragene Datenmenge, Website, von der die Anforderung kommt und Informationen zu Browser und Betriebssystem.
@@ -124,9 +124,11 @@ IP-Adresse, Datum und Uhrzeit der Anfrage, Zeitzonendifferenz zur Greenwich Mean
 Das ist erforderlich, um unsere Website anzuzeigen und die Stabilität und Sicherheit zu gewährleisten. Dies entspricht unserem berechtigten Interesse im Sinne des Art. 6 Abs. 1 S. 1 lit. f DSGVO.
 
 Wir setzen für die Zurverfügungstellung unserer Website den folgenden Hoster ein: 
+
 netcup GmbH 
 Daimlerstraße 25 
 76185 Karlsruhe 
+
 Weitere Informationen zu Widerspruchs- und Beseitigungsmöglichkeiten gegenüber netcup finden Sie unter: https://www.netcup.de/kontakt/datenschutzerklaerung.php
 
 Sie haben das Recht der Verarbeitung zu widersprechen. Ob der Widerspruch erfolgreich ist, ist im Rahmen einer Interessenabwägung zu ermitteln.
