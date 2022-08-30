@@ -38,7 +38,16 @@
     ol li {
       @apply mx-10
     }
-    blockquote {
+    p {
+      @apply pt-1
+    }
+    hr {
+      @apply my-2
+    }
+    code { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 p-0.5 }
+}
+
+    .tangent {
       @apply px-5
              py-2
              my-2
@@ -49,18 +58,16 @@
              border-dark3
              before:dark:text-light0
              before:text-dark0
+             before:dark:bg-dark0
+             before:bg-light0
+             before:block
+             before:w-min
+             before:mt-[-1.5rem]
+             before:ml-[-0.5rem]
+             before:ml-[-0.5rem]
+             before:p-1
              before:content-['tangent']
-             before:-mx-2
     }
-    p {
-      @apply pt-1
-    }
-    hr {
-      @apply my-2
-    }
-    code { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 p-0.5 }
-}
-
     .chroma code { width: 0; height: 0; margin: 0; padding: 0; } /* Created by the code formatter, but i don't want it */
     /* Background */ .chroma { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 px-2 py-2 my-2 overflow-x-auto max-w-full }
     /* Error */ .chroma .err { color: #ff0000 }

@@ -101,7 +101,7 @@ func renderSimpleMarkdownPage(title []byte, content []byte, index bool) func(*gi
 	}
 }
 
-func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string) *gin.Engine {
+func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string, mediadir string) *gin.Engine {
 	r := gin.New()
 	log := log.New()
 
@@ -130,6 +130,7 @@ func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string) *gin.Eng
 
 	r.Static("/css", cssdir)
 	r.Static("/fonts", fontdir)
+	r.Static("/media", mediadir)
 	r.StaticFile("/favicon.ico", staticdir+"/data/favicon.ico")
 	r.StaticFile("/robots.txt", staticdir+"/data/robots.txt")
 
@@ -145,9 +146,18 @@ func hasSuffixes(str string, suff []string) bool {
 	return false
 }
 
+func hasPrefixes(str string, pref []string) bool {
+	for _, v := range pref {
+		if strings.HasPrefix(str, v) {
+			return true
+		}
+	}
+	return false
+}
+
 func cacheControl(c *gin.Context) {
 	path := c.Request.URL.Path
-	if hasSuffixes(path, []string{".css", ".txt", ".ico", ".ttf"}) {
+	if hasSuffixes(path, []string{".css", ".txt", ".ico", ".ttf"}) || hasPrefixes(path, []string{"/media"}) {
 		c.Header("Cache-control", "public, max-age=31536000")
 	}
 	c.Next()

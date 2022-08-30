@@ -2,6 +2,7 @@ package server
 
 import (
 	"io"
+	"regexp"
 
 	chromahtml "github.com/alecthomas/chroma/formatters/html"
 	"github.com/alecthomas/chroma/lexers"
@@ -13,8 +14,65 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+func renderHook(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+	_, ok := node.(*ast.CodeBlock)
+	if ok {
+		return renderCodeBlock(w, node, entering)
+	}
+	_, ok = node.(*ast.HTMLSpan)
+	if ok {
+		return renderHTMLBlock(w, node, entering)
+	}
+	return ast.GoToNext, false
+}
+
+func renderHTMLBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+	n, ok := node.(*ast.HTMLSpan)
+
+	if !ok {
+		return ast.GoToNext, false
+	}
+
+	b := n.Literal
+	r, err := regexp.Compile("< *(/?)(.*) *>")
+	if err != nil {
+		log.Error(err)
+		return ast.GoToNext, false
+	}
+	b2 := r.FindSubmatch(b)
+	closing := len(b2[1]) > 0
+	tag := b2[2]
+	allowedTags := [][]byte{[]byte("tangent")}
+	if contains(allowedTags, tag) {
+		if !closing {
+			w.Write([]byte("<div class=\""))
+			w.Write(tag)
+			w.Write([]byte("\">"))
+		} else {
+			w.Write([]byte("</div>"))
+		}
+	}
+
+	return ast.GoToNext, true
+}
+
+func contains(arr [][]byte, x []byte) bool {
+	for _, v := range arr {
+		if len(v) != len(x) {
+			return false
+		}
+		for i := range v {
+			if x[i] != v[i] {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func renderCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
 	n, ok := node.(*ast.CodeBlock)
+
 	if !ok {
 		return ast.GoToNext, false
 	}
@@ -43,7 +101,7 @@ func renderCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus,
 
 func Render(text []byte) []byte {
 	parser := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs)
-	opts := html.RendererOptions{Flags: html.CommonFlags, RenderNodeHook: renderCodeBlock}
+	opts := html.RendererOptions{Flags: html.CommonFlags, RenderNodeHook: renderHook}
 	renderer := html.NewRenderer(opts)
 	return markdown.ToHTML([]byte(text), parser, renderer)
 }

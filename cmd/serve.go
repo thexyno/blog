@@ -32,6 +32,7 @@ package cmd
 
 import (
 	"os"
+
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -41,6 +42,7 @@ import (
 )
 
 const cssDirKey = "cssdir"
+const mediaDirKey = "mediadir"
 const staticDirKey = "staticdir"
 const fontDirKey = "fontdir"
 const listenKey = "listen"
@@ -54,10 +56,20 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cssDir := viper.GetString(cssDirKey)
 		fontDir := viper.GetString(fontDirKey)
+		mediaDir := viper.GetString(mediaDirKey)
 		staticDir := viper.GetString(staticDirKey)
 		listen := viper.GetString(listenKey)
 		dbURI := viper.GetString(dbURIKey)
 		releaseMode := viper.GetBool(releaseModeKey)
+		if _, err := os.Stat(mediaDir); err != nil {
+			if os.IsNotExist(err) {
+				if err = os.Mkdir(mediaDir, 0755); err != nil {
+					log.Panic(err)
+				}
+			} else {
+				log.Panic(err)
+			}
+		}
 
 		log.Print(viper.GetString("fontdir"))
 		log.Printf("Starting Xynoblog on %s", listen)
@@ -66,8 +78,8 @@ var serveCmd = &cobra.Command{
 		if err != nil {
 			log.Panic(err)
 		}
-		log.Printf("Fontdir: %s, CSSDir: %s, StaticDir: %s", fontDir, cssDir, staticDir)
-		mux := server.Mux(database, fontDir, cssDir, staticDir)
+		log.Printf("Fontdir: %s, CSSDir: %s, StaticDir: %s, MediaDir: %s", fontDir, cssDir, staticDir, mediaDir)
+		mux := server.Mux(database, fontDir, cssDir, staticDir, mediaDir)
 		log.Printf("Started Xynoblog on %s", listen)
 		if releaseMode {
 			gin.SetMode(gin.ReleaseMode)
@@ -83,6 +95,8 @@ func init() {
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
+	serveCmd.Flags().String(mediaDirKey, "./media", "Directory where blog images,... will be stored")
+	viper.BindPFlag(mediaDirKey, serveCmd.Flags().Lookup(mediaDirKey))
 	serveCmd.Flags().String(fontDirKey, "", "Directory containing JetBrainsMono[wght].ttf")
 	viper.BindPFlag(fontDirKey, serveCmd.Flags().Lookup(fontDirKey))
 

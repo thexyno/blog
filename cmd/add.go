@@ -59,6 +59,10 @@ var addCmd = &cobra.Command{
 	Short: "Add a post",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
+		dbc := db.NewDb(viper.GetString(dbURIKey))
+		if err := dbc.Seed(); err != nil {
+			log.Panic(err)
+		}
 		for _, arg := range args {
 			filepath.Walk(arg, func(path string, info os.FileInfo, err error) error {
 				if !info.IsDir() && strings.HasSuffix(path, ".md") {
@@ -78,12 +82,7 @@ var addCmd = &cobra.Command{
 					}
 					mdRest := strings.Join(mdsplit[2:], "")
 					server.Render([]byte(mdRest)) // Panics when md is broken
-					dbc := db.NewDb(viper.GetString(dbURIKey))
 
-					if err := dbc.Seed(); err != nil {
-						log.Error(err)
-						return err
-					}
 					if err := dbc.Add(db.Post{
 						Title:   header.Title,
 						Id:      db.PostId(header.Id),
