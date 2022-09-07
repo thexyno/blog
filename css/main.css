@@ -46,7 +46,16 @@
     }
     code { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 p-0.5 }
 }
-
+    .box {
+      @apply px-5
+             py-2
+             my-2
+             dark:text-light3
+             text-dark3
+             border-2
+             dark:border-bright_red
+             border-bright_red
+    }
     .tangent {
       @apply px-5
              py-2

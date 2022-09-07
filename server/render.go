@@ -42,7 +42,7 @@ func renderHTMLBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus,
 	b2 := r.FindSubmatch(b)
 	closing := len(b2[1]) > 0
 	tag := b2[2]
-	allowedTags := [][]byte{[]byte("tangent")}
+	allowedTags := [][]byte{[]byte("tangent"), []byte("box")}
 	if contains(allowedTags, tag) {
 		if !closing {
 			w.Write([]byte("<div class=\""))
@@ -56,18 +56,25 @@ func renderHTMLBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus,
 	return ast.GoToNext, true
 }
 
-func contains(arr [][]byte, x []byte) bool {
-	for _, v := range arr {
-		if len(v) != len(x) {
+func equals(arr []byte, x []byte) bool {
+	if len(arr) != len(x) {
+		return false
+	}
+	for i := range arr {
+		if x[i] != arr[i] {
 			return false
-		}
-		for i := range v {
-			if x[i] != v[i] {
-				return false
-			}
 		}
 	}
 	return true
+}
+
+func contains(arr [][]byte, x []byte) bool {
+	for _, v := range arr {
+		if equals(v, x) {
+			return true
+		}
+	}
+	return false
 }
 
 func renderCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
