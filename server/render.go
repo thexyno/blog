@@ -11,8 +11,12 @@ import (
 	"github.com/gomarkdown/markdown/ast"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
+	"github.com/thexyno/xynoblog/db"
+
 	log "github.com/sirupsen/logrus"
 )
+
+var renderCache = make(map[db.IdUpdated]([]byte))
 
 func renderHook(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
 	_, ok := node.(*ast.CodeBlock)
@@ -106,9 +110,23 @@ func renderCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus,
 	return ast.GoToNext, true
 }
 
-func Render(text []byte) []byte {
+func Render(post db.Post) []byte {
+	idu := post.ToIdUpdated()
+	if cached, exists := renderCache[idu]; exists {
+		return cached
+	}
+
 	parser := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs)
 	opts := html.RendererOptions{Flags: html.CommonFlags, RenderNodeHook: renderHook}
 	renderer := html.NewRenderer(opts)
-	return markdown.ToHTML([]byte(text), parser, renderer)
+	bytes := markdown.ToHTML([]byte(post.Content), parser, renderer)
+	renderCache[idu] = bytes
+	return bytes
+}
+
+func RenderSimple(text []byte) []byte {
+	parser := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs)
+	opts := html.RendererOptions{Flags: html.CommonFlags, RenderNodeHook: renderHook}
+	renderer := html.NewRenderer(opts)
+	return markdown.ToHTML(text, parser, renderer)
 }

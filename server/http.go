@@ -78,7 +78,7 @@ func renderPost(db db.DbConn) func(*gin.Context) {
 		if !gin.IsDebugging() {
 			c.Header("Last-Modified", post.Updated.Format(http.TimeFormat))
 		}
-		rendered := Render([]byte(post.Content))
+		rendered := Render(post)
 		p := &templates.PostPage{
 			Post:            post,
 			RenderedContent: rendered,
@@ -89,7 +89,7 @@ func renderPost(db db.DbConn) func(*gin.Context) {
 
 func renderSimpleMarkdownPage(title []byte, content []byte, index bool) func(*gin.Context) {
 	return func(c *gin.Context) {
-		rendered := Render(content)
+		rendered := RenderSimple(content)
 		p := &templates.SimpleMdPage{
 			PageTitle:       title,
 			RenderedContent: rendered,

@@ -18,6 +18,11 @@ type DbConn struct {
 
 type PostId string
 
+type IdUpdated struct {
+	Id      PostId
+	Updated time.Time
+}
+
 type Post struct {
 	Id         PostId
 	Title      string
@@ -26,6 +31,10 @@ type Post struct {
 	Updated    time.Time
 	Tags       []string
 	TimeToRead time.Duration
+}
+
+func (post *Post) ToIdUpdated() IdUpdated {
+	return IdUpdated{post.Id, post.Updated}
 }
 
 const (
