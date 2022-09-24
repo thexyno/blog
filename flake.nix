@@ -100,7 +100,8 @@
               # In 'nix develop', we don't need a copy of the source tree
               # in the Nix store.
               src = ./.;
-              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper ];
+              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper];
+              buildInputs = [ pkgs.libwebp ];
 
               ldflags = [
                 "-X \"github.com/thexyno/xynoblog/statics.CSSFile=${csssha}\""
@@ -131,9 +132,9 @@
               # it should be "out-of-band" with other tooling (eg. gomod2nix).
               # To begin with it is recommended to set this, but one must
               # remeber to bump this hash when your dependencies change.
-              # vendorSha256 = pkgs.lib.fakeSha256;
+              #vendorSha256 = pkgs.lib.fakeSha256;
 
-              vendorSha256 = "sha256-/D8i2txBkqplq0n93gYxK4NDjEr+jXN5AXueyAguCXw=";
+              vendorSha256 = "sha256-EgM7902IswosjKuyLy4aJEuVwVNEveUXexjbWoljIcc=";
             };
         });
 
@@ -145,7 +146,7 @@
         let pkgs = nixpkgsFor.${system}; in
         (pkgs.mkShell {
           XYNOBLOG_FONTDIR = "${pkgs.jetbrains-mono}/share/fonts/truetype";
-          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go_1_18 pkgs.nodePackages.tailwindcss pkgs.lefthook ];
+          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go_1_18 pkgs.nodePackages.tailwindcss pkgs.lefthook pkgs.libwebp ];
         }));
     };
 }

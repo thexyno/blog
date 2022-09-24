@@ -1,0 +1,9 @@
+version: 2
+sql:
+  - engine: "sqlite"
+    schema: "db/schema.sql"
+    queries: "db/query.sql"
+    gen:
+      go:
+        package: "dbconn"
+        out: "dbconn"

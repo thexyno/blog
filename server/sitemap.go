@@ -24,16 +24,16 @@ type urlblock struct {
 
 func renderSitemap(db db.DbConn) func(*gin.Context) {
 	return func(c *gin.Context) {
-		post, times, err := db.PostIds()
+		post, err := db.PostIds()
 		if err != nil {
 			log.WithField("request", c.Request.URL.Path).Error(err)
 			renderISE(c, err)
 			return
 		}
 		var newest time.Time
-		for _, v := range times {
-			if newest.Before(v) {
-				newest = v
+		for _, v := range post {
+			if newest.Before(v.UpdatedAt) {
+				newest = v.UpdatedAt
 			}
 		}
 
@@ -43,7 +43,7 @@ func renderSitemap(db db.DbConn) func(*gin.Context) {
 		}
 
 		for i := range post {
-			time := times[i]
+			time := post[i].UpdatedAt
 			id := post[i]
 			blocks = append(blocks, urlblock{fmt.Sprintf("https://xyno.space/post/%s", id), time.Format("2006-01-02"), "yearly", 0.9})
 		}

@@ -1,8 +1,9 @@
 package db
 
 import (
+	"context"
 	"database/sql"
-	"encoding/json"
+	_ "embed"
 	"errors"
 	"math"
 	"regexp"
@@ -10,10 +11,13 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 	log "github.com/sirupsen/logrus"
+	"github.com/thexyno/xynoblog/dbconn"
 )
 
 type DbConn struct {
-	db *sql.DB
+	db      *sql.DB
+	ctx     context.Context
+	queries *dbconn.Queries
 }
 
 type PostId string
@@ -32,20 +36,21 @@ type Post struct {
 	Tags       []string
 	TimeToRead time.Duration
 }
+type PostNoContent struct {
+	Id      PostId
+	Title   string
+	Created time.Time
+	Updated time.Time
+}
 
 func (post *Post) ToIdUpdated() IdUpdated {
 	return IdUpdated{post.Id, post.Updated}
 }
 
-const (
-	shortPostStmt string = "select id, title, substr(content,0,?), created, updated, tags from posts order by created desc limit ? offset ?"
-	postIdStmt    string = "select id, updated from posts"
-	postStmt      string = "select id, title, content, created, updated, tags from posts where id = ?"
-)
+var ErrNotFound error = errors.New("not found")
 
-var (
-	ErrNotFound error = errors.New("not found")
-)
+//go:embed schema.sql
+var ddl string
 
 func NewDb(uri string) DbConn {
 	log.Infof("dbpath is %v", uri)
@@ -53,7 +58,7 @@ func NewDb(uri string) DbConn {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return DbConn{db}
+	return DbConn{db, context.Background(), dbconn.New(db)}
 }
 
 func (conn *DbConn) Close() error {
@@ -61,26 +66,90 @@ func (conn *DbConn) Close() error {
 }
 
 func (conn *DbConn) Seed() error {
-	log.Info("seeding db")
-	stmt := `
-create table if not exists posts (id text primary key not null, title text not null, content text not null, created datetime not null, updated datetime not null, tags text not null);
-`
-	_, err := conn.db.Exec(stmt)
-	return err
+	// create tables
+	if _, err := conn.db.ExecContext(conn.ctx, ddl); err != nil {
+		return err
+	}
+	return nil
 }
 
-func (conn *DbConn) Add(post Post) error {
-	tags, err := json.Marshal(post.Tags)
+func (conn *DbConn) updatePost(post Post) error {
+	tx, err := conn.db.Begin()
 	if err != nil {
 		return err
 	}
+	qtx := conn.queries.WithTx(tx)
+	err = qtx.UpdatePost(conn.ctx,
+		dbconn.UpdatePostParams{
+			PostID:    string(post.Id),
+			Title:     post.Title,
+			Content:   post.Content,
+			CreatedAt: post.Created,
+			UpdatedAt: time.Now(),
+			PostID_2:  string(post.Id),
+		},
+	)
+	if err != nil {
+		return err
+	}
+	err = qtx.DeleteTags(conn.ctx, string(post.Id))
+	if err != nil {
+		return err
+	}
+	for _, tag := range post.Tags {
+		_, err = qtx.AddTag(conn.ctx, dbconn.AddTagParams{
+			PostID: string(post.Id),
+			Tag:    tag,
+		})
+		if err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
+}
+
+func (conn *DbConn) insertPost(post Post) error {
+	tx, err := conn.db.Begin()
+	if err != nil {
+		return err
+	}
+	qtx := conn.queries.WithTx(tx)
+	_, err = qtx.AddPost(conn.ctx,
+		dbconn.AddPostParams{
+			PostID:    string(post.Id),
+			Title:     post.Title,
+			Content:   post.Content,
+			CreatedAt: post.Created,
+			UpdatedAt: post.Created,
+		},
+	)
+	if err != nil {
+		return err
+	}
+	for _, tag := range post.Tags {
+		_, err = qtx.AddTag(conn.ctx, dbconn.AddTagParams{
+			PostID: string(post.Id),
+			Tag:    tag,
+		})
+		if err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
+}
+
+func (conn *DbConn) Add(post Post) error {
 	dbpost, err := conn.Post(string(post.Id))
 	log.Infof("adding %s to posts", post.Id)
 	if err != nil || dbpost.Id == "" {
-		_, err = conn.db.Exec("insert into posts values (?,?,?,?,?,?)", post.Id, post.Title, post.Content, post.Created, post.Updated, tags)
+		if err := conn.insertPost(post); err != nil {
+			return err
+		}
 		log.Info("added via insert")
 	} else if dbpost.Updated.Before(post.Updated) || dbpost.Content != post.Content {
-		_, err = conn.db.Exec("update posts set title = ?, content = ?, created = ?, updated = ?, tags = ? WHERE id = ?", post.Title, post.Content, post.Created, post.Updated, tags, post.Id)
+		if err := conn.updatePost(post); err != nil {
+			return err
+		}
 		log.Info("added via update")
 	} else {
 		log.Info("post didnt change")
@@ -99,89 +168,68 @@ func wordCount(value string) int {
 
 /// returns post  with id = id
 func (conn *DbConn) Post(id string) (Post, error) {
-	rows, err := conn.db.Query(postStmt, id)
+	post, err := conn.queries.GetPost(conn.ctx, id)
 	if err != nil {
 		return Post{}, err
 	}
-	defer rows.Close()
-	var post Post
-	hasRow := false
-	for rows.Next() {
-		hasRow = true
-		var id PostId
-		var title string
-		var content string
-		var created time.Time
-		var updated time.Time
-		var tmpTags string
-		rowErr := rows.Scan(&id, &title, &content, &created, &updated, &tmpTags)
-		if rowErr != nil {
-			log.Print("Post row Error: ", rowErr)
-			return Post{}, err
-		}
-		var tags []string
-		tagsErr := json.Unmarshal([]byte(tmpTags), &tags)
-		if tagsErr != nil {
-			log.Print("Post tags Error: ", tagsErr)
-			return Post{}, err
-		}
-		duration := time.Duration(math.Ceil(float64(wordCount(content))/239.0) * 60000000000)
-		post = Post{id, title, content, created, updated, tags, duration}
+	tags, err := conn.queries.GetTags(conn.ctx, id)
+	if err != nil {
+		return Post{}, err
 	}
-	if hasRow {
-		return post, nil
-	} else {
-		return post, ErrNotFound
-	}
+	duration := time.Duration(math.Ceil(float64(wordCount(post.Content))/239.0) * 60000000000)
+	return Post{
+		PostId(post.PostID),
+		post.Title,
+		post.Content,
+		post.CreatedAt,
+		post.UpdatedAt,
+		tags,
+		duration,
+	}, nil
 }
 
-func (conn *DbConn) PostIds() ([]PostId, []time.Time, error) {
-	rows, err := conn.db.Query(string(postIdStmt))
+/// returns post  with id = id
+func (conn *DbConn) Posts(limit int64, offset int64) ([]Post, error) {
+	posts, err := conn.queries.GetPosts(conn.ctx, dbconn.GetPostsParams{Limit: limit, Offset: offset})
 	if err != nil {
-		return []PostId{}, nil, err
+		return []Post{}, err
 	}
-	defer rows.Close()
-	ids := []PostId{}
-	times := []time.Time{}
-	for rows.Next() {
-		var id PostId
-		var updated time.Time
-		rowErr := rows.Scan(&id, &updated)
-		if rowErr != nil {
-			return []PostId{}, nil, rowErr
-		}
-		ids = append(ids, id)
-		times = append(times, updated)
+	var toReturn = make([]Post, len(posts))
+	for i, post := range posts {
+		toReturn[i] =
+			Post{
+				PostId(post.PostID),
+				post.Title,
+				post.Content,
+				post.CreatedAt,
+				post.UpdatedAt,
+				[]string{},
+				0,
+			}
 	}
-	return ids, times, nil
+	return toReturn, nil
+}
+
+func (conn *DbConn) PostIds() ([]dbconn.GetPostIdsRow, error) {
+	return conn.queries.GetPostIds(conn.ctx)
 }
 
 // returns posts with only textLength chars of post text and no duration
 // limit = -1 returns all
-func (conn *DbConn) ShortPosts(textLength int, limit int, skip uint) ([]Post, error) {
-	rows, err := conn.db.Query(string(shortPostStmt), textLength, limit, skip)
+func (conn *DbConn) ShortPosts(limit int64, skip int64) ([]PostNoContent, error) {
+	posts, err := conn.queries.GetPostsNoContent(conn.ctx, dbconn.GetPostsNoContentParams{Limit: limit, Offset: skip})
+
 	if err != nil {
-		return []Post{}, err
+		return []PostNoContent{}, err
 	}
-	defer rows.Close()
-	posts := []Post{}
-	for rows.Next() {
-		var id PostId
-		var title string
-		var content string
-		var created time.Time
-		var updated time.Time
-		var tmpTags string
-		rowErr := rows.Scan(&id, &title, &content, &created, &updated, &tmpTags)
-		if rowErr != nil {
-			log.Print("ShortPosts row Error: ", rowErr)
+	var toReturn = make([]PostNoContent, len(posts))
+	for i, post := range posts {
+		toReturn[i] = PostNoContent{
+			PostId(post.PostID),
+			post.Title,
+			post.CreatedAt,
+			post.UpdatedAt,
 		}
-		var tags []string
-		tagsErr := json.Unmarshal([]byte(tmpTags), &tags)
-		if tagsErr != nil {
-			log.Print("ShortPosts tags Error: ", tagsErr)
-		}
-		posts = append(posts, Post{id, title, content, created, updated, tags, time.Duration(0)})
 	}
-	return posts, nil
+	return toReturn, nil
 }

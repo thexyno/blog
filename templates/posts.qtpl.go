@@ -24,7 +24,7 @@ var (
 
 //line ../templates/posts.qtpl:7
 type PostsPage struct {
-	Posts []db.Post
+	Posts []db.PostNoContent
 }
 
 //line ../templates/posts.qtpl:13

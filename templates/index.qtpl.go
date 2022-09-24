@@ -24,7 +24,7 @@ var (
 
 //line ../templates/index.qtpl:7
 type IndexPage struct {
-	Posts []db.Post
+	Posts []db.PostNoContent
 }
 
 //line ../templates/index.qtpl:13
@@ -138,15 +138,14 @@ func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
     <h1 class="pt-8 font-bold">xyno</h1>
     <h3 class="px-4 text-xl text-dark1 dark:text-light1">✨ Full Stack Developer ✨</h3>
     <h3 class="text-xl">Skills:</h3>
-    <div class="px-8">
       <ul>
         <li>Go</li>
         <li>Dart/Flutter</li>
         <li>Typescript/Javascript</li>
-      </ul>
-      <ul class="px-4">
-        <li>Angular</li>
-        <li>Nest.JS</li>
+        <ul>
+          <li>Angular</li>
+          <li>Nest.JS</li>
+        </ul>
       </ul>
       <ul>
         <li>Kubernetes</li>
@@ -155,127 +154,124 @@ func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
         <li>Nix/NixOS</li>
         <li>GitLab CI</li>
       </ul>
-    </div>
 	<h3 class="pt-4 text-xl font-semibold">Links:</h3>
-      <div class="px-8">
       <ul>
         <li><a target="_blank" href="https://github.com/thexyno">GitHub - thexyno</a></li>
         <li><a rel="me" target="_blank" href="https://matrix.to/#/@me:ragon.xyz">Matrix - @me:ragon.xyz</a></li>
         <li><a rel="me" target="_blank" href="https://chaos.social/@xyno">Mastodon - @xyno@chaos.social</a></li>
         <li><a rel="me" target="_blank" href="https://twitter.com/thexyn0">Twitter - @thexyn0</a></li>
       </ul>
-	  </div>
-	<h3 class="pt-4 text-xl font-semibold">Latest Posts:</h3>
-      <div class="px-8 flex flex-col">
+	<h3 class="text-xl font-semibold">Latest Posts:</h3>
+      <div class="px-6 flex flex-col">
       `)
-//line ../templates/index.qtpl:56
+//line ../templates/index.qtpl:52
 	if len(p.Posts) == 0 {
-//line ../templates/index.qtpl:56
+//line ../templates/index.qtpl:52
 		qw422016.N().S(`
 	  	No posts.
 	  `)
-//line ../templates/index.qtpl:58
+//line ../templates/index.qtpl:54
 	} else {
-//line ../templates/index.qtpl:58
+//line ../templates/index.qtpl:54
 		qw422016.N().S(`
 	  		`)
-//line ../templates/index.qtpl:59
+//line ../templates/index.qtpl:55
 		streamemitPosts(qw422016, p.Posts)
-//line ../templates/index.qtpl:59
+//line ../templates/index.qtpl:55
 		qw422016.N().S(`
 	  `)
-//line ../templates/index.qtpl:60
+//line ../templates/index.qtpl:56
 	}
-//line ../templates/index.qtpl:60
+//line ../templates/index.qtpl:56
 	qw422016.N().S(`
 	  </div>
 	</div>
 `)
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 }
 
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 func (p *IndexPage) WriteBody(qq422016 qtio422016.Writer) {
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 	p.StreamBody(qw422016)
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 	qt422016.ReleaseWriter(qw422016)
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 }
 
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 func (p *IndexPage) Body() string {
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 	qb422016 := qt422016.AcquireByteBuffer()
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 	p.WriteBody(qb422016)
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 	qs422016 := string(qb422016.B)
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 	qt422016.ReleaseByteBuffer(qb422016)
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 	return qs422016
-//line ../templates/index.qtpl:63
+//line ../templates/index.qtpl:59
 }
 
-//line ../templates/index.qtpl:65
-func streamemitPosts(qw422016 *qt422016.Writer, posts []db.Post) {
-//line ../templates/index.qtpl:65
+//line ../templates/index.qtpl:61
+func streamemitPosts(qw422016 *qt422016.Writer, posts []db.PostNoContent) {
+//line ../templates/index.qtpl:61
 	qw422016.N().S(`
    `)
-//line ../templates/index.qtpl:66
+//line ../templates/index.qtpl:62
 	for _, v := range posts {
-//line ../templates/index.qtpl:66
+//line ../templates/index.qtpl:62
 		qw422016.N().S(`
      <a href="/post/`)
-//line ../templates/index.qtpl:67
+//line ../templates/index.qtpl:63
 		qw422016.E().S(string(v.Id))
-//line ../templates/index.qtpl:67
+//line ../templates/index.qtpl:63
 		qw422016.N().S(`">
       <span>`)
-//line ../templates/index.qtpl:68
+//line ../templates/index.qtpl:64
 		qw422016.E().S(v.Title)
-//line ../templates/index.qtpl:68
+//line ../templates/index.qtpl:64
 		qw422016.N().S(`</span>
       <span class="text-xs font-thin text-dark3 dark:text-light3 ">(`)
-//line ../templates/index.qtpl:69
+//line ../templates/index.qtpl:65
 		qw422016.E().S(v.Created.Format("2006-01-02"))
-//line ../templates/index.qtpl:69
+//line ../templates/index.qtpl:65
 		qw422016.N().S(`)</span>
      </a>
    `)
-//line ../templates/index.qtpl:71
+//line ../templates/index.qtpl:67
 	}
-//line ../templates/index.qtpl:71
+//line ../templates/index.qtpl:67
 	qw422016.N().S(`
 `)
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
 }
 
-//line ../templates/index.qtpl:72
-func writeemitPosts(qq422016 qtio422016.Writer, posts []db.Post) {
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
+func writeemitPosts(qq422016 qtio422016.Writer, posts []db.PostNoContent) {
+//line ../templates/index.qtpl:68
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
 	streamemitPosts(qw422016, posts)
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
 	qt422016.ReleaseWriter(qw422016)
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
 }
 
-//line ../templates/index.qtpl:72
-func emitPosts(posts []db.Post) string {
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
+func emitPosts(posts []db.PostNoContent) string {
+//line ../templates/index.qtpl:68
 	qb422016 := qt422016.AcquireByteBuffer()
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
 	writeemitPosts(qb422016, posts)
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
 	qs422016 := string(qb422016.B)
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
 	qt422016.ReleaseByteBuffer(qb422016)
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
 	return qs422016
-//line ../templates/index.qtpl:72
+//line ../templates/index.qtpl:68
 }

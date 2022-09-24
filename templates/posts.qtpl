@@ -5,7 +5,7 @@
 
 {% code
 type PostsPage struct {
-    Posts []db.Post
+    Posts []db.PostNoContent
 }
 %}
 

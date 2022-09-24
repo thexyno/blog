@@ -42,7 +42,6 @@ import (
 )
 
 const cssDirKey = "cssdir"
-const mediaDirKey = "mediadir"
 const staticDirKey = "staticdir"
 const fontDirKey = "fontdir"
 const listenKey = "listen"
@@ -74,10 +73,7 @@ var serveCmd = &cobra.Command{
 		log.Print(viper.GetString("fontdir"))
 		log.Printf("Starting Xynoblog on %s", listen)
 		database := db.NewDb(dbURI)
-		err := database.Seed()
-		if err != nil {
-			log.Panic(err)
-		}
+		database.Seed()
 		log.Printf("Fontdir: %s, CSSDir: %s, StaticDir: %s, MediaDir: %s", fontDir, cssDir, staticDir, mediaDir)
 		mux := server.Mux(database, fontDir, cssDir, staticDir, mediaDir)
 		log.Printf("Started Xynoblog on %s", listen)
@@ -95,8 +91,6 @@ func init() {
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	serveCmd.Flags().String(mediaDirKey, "./media", "Directory where blog images,... will be stored")
-	viper.BindPFlag(mediaDirKey, serveCmd.Flags().Lookup(mediaDirKey))
 	serveCmd.Flags().String(fontDirKey, "", "Directory containing JetBrainsMono[wght].ttf")
 	viper.BindPFlag(fontDirKey, serveCmd.Flags().Lookup(fontDirKey))
 

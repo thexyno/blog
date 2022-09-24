@@ -41,6 +41,7 @@ import (
 var cfgFile string
 
 const dbURIKey = "db"
+const mediaDirKey = "mediadir"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -70,6 +71,8 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is /etc/xynoblog/xynoblog.yaml)")
 	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	rootCmd.PersistentFlags().String(mediaDirKey, "./media", "Directory where blog images will be stored")
+	viper.BindPFlag(mediaDirKey, rootCmd.PersistentFlags().Lookup(mediaDirKey))
 	rootCmd.PersistentFlags().String(dbURIKey, "./blog.db", "sqlite uri")
 	viper.BindPFlag(dbURIKey, rootCmd.PersistentFlags().Lookup(dbURIKey))
 	// Cobra also supports local flags, which will only run

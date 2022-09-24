@@ -33,6 +33,7 @@ package cmd
 import (
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -42,6 +43,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/thexyno/xynoblog/db"
 	"github.com/thexyno/xynoblog/server"
+	"github.com/thexyno/xynoblog/util"
 	"gopkg.in/yaml.v3"
 )
 
@@ -60,13 +62,12 @@ var addCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		dbc := db.NewDb(viper.GetString(dbURIKey))
-		if err := dbc.Seed(); err != nil {
-			log.Panic(err)
-		}
+		mediaDir := viper.GetString(mediaDirKey)
+		dbc.Seed()
 		for _, arg := range args {
-			filepath.Walk(arg, func(path string, info os.FileInfo, err error) error {
-				if !info.IsDir() && strings.HasSuffix(path, ".md") {
-					md, err := ioutil.ReadFile(path)
+			filepath.Walk(arg, func(fpath string, info os.FileInfo, err error) error {
+				if !info.IsDir() && strings.HasSuffix(fpath, ".md") {
+					md, err := ioutil.ReadFile(fpath)
 					if err != nil {
 						log.Error(err)
 						return err
@@ -81,7 +82,12 @@ var addCmd = &cobra.Command{
 						return err
 					}
 					mdRest := strings.Join(mdsplit[2:], "")
-					server.Render([]byte(mdRest)) // Panics when md is broken
+					mdRest, err = util.AddMedia(mdRest, mediaDir, path.Dir(fpath))
+					if err != nil {
+						log.Error(err)
+						return err
+					}
+					server.RenderSimple([]byte(mdRest)) // Panics when md is broken
 
 					if err := dbc.Add(db.Post{
 						Title:   header.Title,

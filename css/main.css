@@ -12,31 +12,24 @@
         @apply font-mono dark:bg-dark0 bg-light0 text-dark0 dark:text-light0 text-sm leading-relaxed
     }
     article {
-        @apply px-1
     }
     a {
         @apply text-neutral_yellow hover:text-bright_yellow visited:text-faded_yellow
     }
     h1 {
-        @apply py-3 font-semibold text-2xl text-dark1 dark:text-light1
+        @apply pt-2 pb-1 font-semibold text-2xl text-dark1 dark:text-light1
     }
     h2 {
-        @apply py-2 pt-1 font-semibold text-xl text-bright_orange
+        @apply pt-2 pb-1 font-semibold text-xl text-bright_orange
     }
     h3 {
-        @apply pt-3 font-semibold text-lg text-bright_orange
-    }
-    ul li {
-      @apply mx-7
+        @apply pt-2 pb-1 font-semibold text-lg text-bright_orange
     }
     ul {
-        @apply list-disc
+        @apply list-disc pl-6
     }
     ol {
-        @apply list-decimal
-    }
-    ol li {
-      @apply mx-10
+        @apply list-decimal pl-11
     }
     p {
       @apply pt-1

@@ -11,13 +11,13 @@ import (
 )
 
 func generateFeed(dbc db.DbConn) (*feeds.Feed, error) {
-	sposts, err := dbc.ShortPosts(100000000, -1, 0)
+	posts, err := dbc.Posts(-1, 0)
 	if err != nil {
 		return nil, err
 	}
-	items := make([]*feeds.Item, len(sposts))
+	items := make([]*feeds.Item, len(posts))
 	newest := time.Unix(0, 0)
-	for i, v := range sposts {
+	for i, v := range posts {
 		if v.Updated.After(newest) {
 			newest = v.Updated
 		}
@@ -25,7 +25,7 @@ func generateFeed(dbc db.DbConn) (*feeds.Feed, error) {
 			Id:          string(v.Id),
 			Title:       v.Title,
 			Link:        &feeds.Link{Href: fmt.Sprint("https://xyno.space/post/", v.Id)},
-			Description: string(Render([]byte(v.Content))),
+			Description: string(Render(v)),
 			Created:     v.Created,
 		}
 	}

@@ -31,7 +31,7 @@ func renderError(c *gin.Context, err error) {
 
 func renderPosts(db db.DbConn) func(*gin.Context) {
 	return func(c *gin.Context) {
-		posts, err := db.ShortPosts(0, 1000, 0)
+		posts, err := db.ShortPosts(-1, 0)
 		if err != nil {
 			renderError(c, err)
 			return
@@ -47,7 +47,7 @@ func renderPosts(db db.DbConn) func(*gin.Context) {
 }
 func renderIndex(db db.DbConn) func(*gin.Context) {
 	return func(c *gin.Context) {
-		posts, err := db.ShortPosts(0, 5, 0)
+		posts, err := db.ShortPosts(5, 0)
 		if err != nil {
 			renderError(c, err)
 			return
