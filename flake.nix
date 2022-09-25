@@ -56,12 +56,14 @@
             };
             users.groups.xynoblog = { };
 
-            security.wrappers.xynoblog = {
-              setuid = true;
-              owner = "xynoblog";
-              group = "xynoblog";
-              source = "${xb}/bin/xynoblog";
-            };
+            environment.systemPackages = [ xb ];
+
+            # security.wrappers.xynoblog = {
+            #   setuid = true;
+            #   owner = "xynoblog";
+            #   group = "xynoblog";
+            #   source = "${xb}/bin/xynoblog";
+            # };
 
             systemd.services.xynoblog = {
               description = "xynoblog blog engine";
