@@ -5,10 +5,12 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"image"
+	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/gomarkdown/markdown"
@@ -38,7 +40,8 @@ func convertImage(link string, mediaDir, postPath string) (string, error) {
 		log.Fatalln(err)
 	}
 	sha := sha256.Sum256(buffer.Bytes())
-	filename := fmt.Sprintf("%x.webp", sha)
+	name := strings.Split(path.Base(link), ".")
+	filename := fmt.Sprintf("%x-%s.webp", sha[0:15], name[len(name)-2])
 	writefile, err := os.Create(mediaDir + "/" + filename)
 	if err != nil {
 		return "", err
@@ -61,8 +64,9 @@ func dontConvertImage(link, mediaDir, postPath string) (string, error) {
 	if _, err := io.Copy(hash, file); err != nil {
 		return "", err
 	}
-	sum := hash.Sum(nil)
-	filename := fmt.Sprintf("%x.svg", sum)
+	sum := hash.Sum(nil)[0:15]
+	name := strings.Split(path.Base(link), ".")
+	filename := fmt.Sprintf("%x-%s.%s", sum, name[len(name)-2], name[len(name)-1])
 	writefile, err := os.Create(mediaDir + "/" + filename)
 	if err != nil {
 		return "", err
@@ -118,7 +122,7 @@ func AddMedia(content, mediaDir, postPath string) (string, error) {
 	renderer := html.NewRenderer(opts)
 	markdown.ToHTML([]byte(content), parser, renderer)
 	for i, v := range addedNow {
-		content = strings.ReplaceAll(content, i, "/media/"+v)
+		content = strings.ReplaceAll(content, i, v)
 	}
 
 	return content, nil

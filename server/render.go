@@ -27,6 +27,21 @@ func renderHook(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool
 	if ok {
 		return renderHTMLBlock(w, node, entering)
 	}
+	_, ok = node.(*ast.Image)
+	if ok {
+		return renderIMGBlock(w, node, entering)
+	}
+	return ast.GoToNext, false
+}
+
+func renderIMGBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+	n, ok := node.(*ast.Image)
+
+	if !ok {
+		return ast.GoToNext, false
+	}
+	tmp := append([]byte("/media/"), n.Destination...)
+	n.Destination = tmp
 	return ast.GoToNext, false
 }
 
