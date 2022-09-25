@@ -56,7 +56,12 @@
             };
             users.groups.xynoblog = { };
 
-            environment.systemPackages = [ xb ];
+            security.wrappers.xynoblog = {
+              setuid = true;
+              owner = "xynoblog";
+              group = "xynoblog";
+              source = "${xb}/bin/xynoblog";
+            };
 
             systemd.services.xynoblog = {
               description = "xynoblog blog engine";
@@ -100,7 +105,7 @@
               # In 'nix develop', we don't need a copy of the source tree
               # in the Nix store.
               src = ./.;
-              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper];
+              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper ];
               buildInputs = [ pkgs.libwebp ];
 
               ldflags = [
