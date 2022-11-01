@@ -24,7 +24,7 @@
 
     in
     {
-      nixosModule = { config, optinos, lib, pkgs, ... }:
+      nixosModule = { config, options, lib, pkgs, ... }:
         let
           cfg = config.services.xynoblog;
           xb = self.packages.${pkgs.system}.xynoblog;

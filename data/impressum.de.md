@@ -10,7 +10,7 @@ Martin-Schmeißer-Weg 12a
 
 ### Kontakt:
 
-Telefon: +491579-2613071
+Telefon: +49179-08431549
 
 E-Mail: impressum@xyno.space
 
