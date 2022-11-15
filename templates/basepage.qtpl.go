@@ -83,7 +83,7 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 //line ../templates/basepage.qtpl:28
 	qw422016.N().S(`
     </head>
-    <body>
+    <body class="mx-2">
       <header class="top-0 z-40 w-full flex-none max-w-8xl mx-auto py-4 px-8 relative flex items-center">
         <a class="pr-8 mr-3 text-2xl flex-none text-neutral_orange visited:text-neutral_orange hover:text-bright_orange font-semibold overflow-hidden md:w-auto" href="/">xynos space</a>
         <a class="mr-3 text-xl flex-none font-semibold overflow-hidden md:w-auto" href="/posts">Blog</a>
@@ -99,38 +99,39 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 	qw422016.N().D(time.Now().Year())
 //line ../templates/basepage.qtpl:37
 	qw422016.N().S(` xyno (Philipp Hochkamp)</p>
+        <br>
         <p>
-          <a href="/impressum-de">Impressum</a>
+          <a href="/impressum-de">Impressum / Datenschutzerklärung</a>
         </p>
       </footer>
     </body>
 </html>
 `)
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 }
 
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 func WritePageTemplate(qq422016 qtio422016.Writer, p Page) {
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 	StreamPageTemplate(qw422016, p)
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 	qt422016.ReleaseWriter(qw422016)
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 }
 
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 func PageTemplate(p Page) string {
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 	WritePageTemplate(qb422016, p)
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 	qs422016 := string(qb422016.B)
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 	return qs422016
-//line ../templates/basepage.qtpl:44
+//line ../templates/basepage.qtpl:45
 }

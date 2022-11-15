@@ -126,7 +126,7 @@ func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string, mediadir
 		log.Panic(err)
 	}
 
-	r.GET("/impressum-de", renderSimpleMarkdownPage([]byte("Impressum"), impressumDE, false))
+	r.GET("/impressum-de", renderSimpleMarkdownPage([]byte("Impressum/Imprint"), impressumDE, false))
 
 	r.Static("/css", cssdir)
 	r.Static("/fonts", fontdir)

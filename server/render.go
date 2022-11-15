@@ -140,8 +140,8 @@ func Render(post db.Post) []byte {
 }
 
 func RenderSimple(text []byte) []byte {
-	parser := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs)
-	opts := html.RendererOptions{Flags: html.CommonFlags, RenderNodeHook: renderHook}
+	parser := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs | parser.Footnotes | parser.LaxHTMLBlocks)
+	opts := html.RendererOptions{Flags: html.CommonFlags | html.HrefTargetBlank | html.LazyLoadImages, RenderNodeHook: renderHook}
 	renderer := html.NewRenderer(opts)
 	return markdown.ToHTML(text, parser, renderer)
 }
