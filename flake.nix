@@ -56,14 +56,12 @@
             };
             users.groups.xynoblog = { };
 
-            environment.systemPackages = [ xb ];
-
-            # security.wrappers.xynoblog = {
-            #   setuid = true;
-            #   owner = "xynoblog";
-            #   group = "xynoblog";
-            #   source = "${xb}/bin/xynoblog";
-            # };
+            environment.systemPackages = [
+              (pkgs.writeScriptBin "xynoblog" ''
+                #!/usr/bin/env bash
+                exec xynoblog --db /var/lib/${cfg.stateDirectory}/blog.db --mediadir /var/lib/${cfg.stateDirectory}/media "$@"
+              '')
+            ];
 
             systemd.services.xynoblog = {
               description = "xynoblog blog engine";
