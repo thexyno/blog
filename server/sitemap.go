@@ -44,7 +44,7 @@ func renderSitemap(db db.DbConn) func(*gin.Context) {
 
 		for i := range post {
 			time := post[i].UpdatedAt
-			id := post[i]
+			id := post[i].PostID
 			blocks = append(blocks, urlblock{fmt.Sprintf("https://xyno.space/post/%s", id), time.Format("2006-01-02"), "yearly", 0.9})
 		}
 
