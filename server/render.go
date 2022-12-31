@@ -3,6 +3,7 @@ package server
 import (
 	"io"
 	"regexp"
+	"sync"
 
 	chromahtml "github.com/alecthomas/chroma/formatters/html"
 	"github.com/alecthomas/chroma/lexers"
@@ -16,7 +17,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var renderCache = make(map[db.IdUpdated]([]byte))
+var renderCache sync.Map
 
 func renderHook(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
 	_, ok := node.(*ast.CodeBlock)
@@ -127,15 +128,15 @@ func renderCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus,
 
 func Render(post db.Post) []byte {
 	idu := post.ToIdUpdated()
-	if cached, exists := renderCache[idu]; exists {
-		return cached
+	if cached, exists := renderCache.Load(idu); exists {
+		return cached.([]byte)
 	}
 
 	parser := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs)
 	opts := html.RendererOptions{Flags: html.CommonFlags, RenderNodeHook: renderHook}
 	renderer := html.NewRenderer(opts)
 	bytes := markdown.ToHTML([]byte(post.Content), parser, renderer)
-	renderCache[idu] = bytes
+	renderCache.Store(idu, bytes)
 	return bytes
 }
 
