@@ -62,7 +62,7 @@ func renderHTMLBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus,
 	b2 := r.FindSubmatch(b)
 	closing := len(b2[1]) > 0
 	tag := b2[2]
-	allowedTags := [][]byte{[]byte("tangent"), []byte("box")}
+	allowedTags := [][]byte{[]byte("tangent"), []byte("box"), []byte("greybox")}
 	if contains(allowedTags, tag) {
 		if !closing {
 			w.Write([]byte("<div class=\""))
