@@ -58,8 +58,8 @@
 
             environment.systemPackages = [
               (pkgs.writeScriptBin "xynoblog" ''
-                #!/usr/bin/env bash
-                exec xynoblog --db /var/lib/${cfg.stateDirectory}/blog.db --mediadir /var/lib/${cfg.stateDirectory}/media "$@"
+                #!/bin/sh
+                exec ${xb}/bin/xynoblog --db /var/lib/${cfg.stateDirectory}/blog.db --mediadir /var/lib/${cfg.stateDirectory}/media "$@"
               '')
             ];
 
