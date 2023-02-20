@@ -3,19 +3,21 @@
 package server
 
 import (
+	"database/sql"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/thexyno/xynoblog/db"
 	"github.com/thexyno/xynoblog/templates"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 func renderError(c *gin.Context, err error) {
 	log.WithField("request", c.FullPath()).Error(err)
 	var p *templates.ErrorPage
-	if err == db.ErrNotFound {
+	if err == db.ErrNotFound || err == sql.ErrNoRows {
 		c.Status(404)
 		p = &templates.ErrorPage{
 			Message: "Not Found",

@@ -160,7 +160,7 @@ func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
         <li><a rel="me" target="_blank" href="https://matrix.to/#/@me:ragon.xyz">Matrix - @me:ragon.xyz</a></li>
         <li><a rel="me" target="_blank" href="https://chaos.social/@xyno">Mastodon - @xyno@chaos.social</a></li>
         <li><a rel="me" target="_blank" href="https://discord.com/users/275303438294974474">Discord - xyno#3212</a></li>
-        <li><a rel="me" target="_blank" href="https://twitter.com/thexyn0">Twitter - @thexyn0</a></li>
+        <li><a rel="me" target="_blank" href="https://twitter.com/thexyn0">Twitter (deprecated) - @thexyn0</a></li>
       </ul>
 	<h3 class="text-xl font-semibold">Latest Posts:</h3>
       <div class="px-6 flex flex-col">
