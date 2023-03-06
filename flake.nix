@@ -2,7 +2,7 @@
   description = "A simple Go package";
 
   # Nixpkgs / NixOS version to use.
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"; # Tailwind isn't in 21.11
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11"; # Tailwind isn't in 21.11
 
   outputs = { self, nixpkgs }:
     let
