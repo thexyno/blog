@@ -139,7 +139,7 @@ func Mux(db db.DbConn, mediadir string) *gin.Engine {
 
 	r.GET("/impressum-de", renderSimpleMarkdownPage([]byte("Impressum/Imprint"), impressumDE, false))
 
-	r.StaticFS("/css", http.FS(&statics.CSSHashDir))
+	r.Group("/statics/").StaticFS("", http.FS(statics.CSSDir))
 	r.Static("/media", mediadir)
 	dataHttpFS := http.FS(statics.DataDir)
 	r.StaticFileFS("/favicon.ico", "favicon.ico", dataHttpFS)

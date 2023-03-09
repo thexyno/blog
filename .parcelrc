@@ -1,0 +1,15 @@
+{
+  "extends": "@parcel/config-default",
+  "resolvers": ["parcel-resolver-qtpl", "..."],
+  "transformers": {
+    "*.qtpl": [
+      "@parcel/transformer-posthtml",
+      "@parcel/transformer-html"
+    ],
+    "*.jsonld": ["parcel-transformer-donothing"]
+  },
+  "packagers": {
+    "*.qtpl": "@parcel/packager-html"
+  },
+  "namers": ["parcel-namer-split", "..." ],
+}

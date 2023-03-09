@@ -87,18 +87,24 @@
           pkgs = nixpkgsFor.${system};
         in
         {
-          xynoblog =
-            let
-              css = pkgs.runCommand "xynoblog-css" { src = ./.; } ''
-                cd $src
-                mkdir $out
-                ${pkgs.nodePackages.tailwindcss}/bin/tailwindcss -i ./css/main.css -o $out/output.css --minify
-                cp $out/output.css $out/$(sha256sum $out/output.css | awk '{print($1)}').css
-                echo $(sha256sum $out/output.css | awk '{print($1)}').css > $out/sha
-                rm $out/output.css
+          xynoblog_tmpl =
+            pkgs.mkYarnPackage rec {
+              pname = "xynoblog_tmpl";
+              inherit version;
+              offlineCache = pkgs.fetchYarnDeps {
+                yarnLock = src + "/yarn.lock";
+                sha256 = "sha256-mSxDAI1PQ3muGnNbkqha4nV5S5htk4gaO6gbh/Z3Zfk=";
+              };
+              src = ./.;
+              packageJSON = ./package.json;
+              distPhase = "true";
+              buildPhase = ''
+                export HOME=$(mktemp -d)
+                echo $node_modules
+                yarn --offline build
               '';
-              csssha = builtins.readFile "${css}/sha";
-            in
+            };
+          xynoblog =
             pkgs.buildGo118Module rec {
               pname = "xynoblog";
               inherit version;
@@ -108,14 +114,13 @@
               nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper ];
               buildInputs = [ pkgs.libwebp ];
 
-              ldflags = [
-                "-X \"github.com/thexyno/xynoblog/statics.CSSFile=${csssha}\""
-              ];
+              preBuild = ''
+                cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/* .
+                go generate ./...
+              '';
 
               preFixup = ''
                 wrapProgram $out/bin/xynoblog \
-                  --prefix XYNOBLOG_FONTDIR : "${pkgs.jetbrains-mono}/share/fonts/truetype" \
-                  --prefix XYNOBLOG_CSSDIR : "${css}" \
                   --prefix XYNOBLOG_STATICDIR : "$out/share/xynoblog" \
                   --prefix GIN_MODE : "release" \
                   --prefix XYNOBLOG_RELEASEMODE : "true"
@@ -151,7 +156,7 @@
         let pkgs = nixpkgsFor.${system}; in
         (pkgs.mkShell {
           XYNOBLOG_FONTDIR = "${pkgs.jetbrains-mono}/share/fonts/truetype";
-          buildInputs = [ pkgs.nixpkgs-fmt pkgs.nodePackages.parcel pkgs.gopls pkgs.go_1_18 pkgs.nodePackages.tailwindcss pkgs.lefthook pkgs.libwebp ];
+          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go_1_18 pkgs.lefthook pkgs.libwebp pkgs.yarn2nix pkgs.yarn ];
         }));
     };
 }

@@ -1,7 +1,5 @@
 {% import (
    "time"
-   "strings"
-   "github.com/thexyno/xynoblog/statics"
    )
 %}
 
@@ -23,7 +21,7 @@ Page {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <!--<meta name="description" content="{%= p.Description() %}">-->
-      <link href="/css/{%s strings.TrimSpace(statics.CSSHashDir.GetHashNoErr("output.css")) %}" rel="stylesheet">
+      <link href="main.css" rel="stylesheet">
       <title>{%= p.Title() %}</title>
       {%= p.Head() %}
     </head>

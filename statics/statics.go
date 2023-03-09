@@ -3,14 +3,10 @@ package statics
 import (
 	"embed"
 	"io/fs"
-
-	"github.com/thexyno/xynoblog/hashFS"
 )
 
 //go:embed dist
-var cssDir embed.FS
-var CSSDir, _ = fs.Sub(cssDir, "dist")
-var CSSHashDir = hashFS.GenHashFS(CSSDir)
+var CSSDir embed.FS
 
 //go:embed data
 var dataDir embed.FS

@@ -1,8 +1,8 @@
 module.exports = {
-        content: ["./templates/*.qtpl"],
+        content: ["./tmplsrc/*.qtpl"],
         theme: {
                 fontFamily: {
-                        "mono": "JetBrainsMono, ui-monospace, SFMono-Regular, Menlo, Monaco",
+                        "mono": "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco",
                         "sans": "ui-sans-serif, system-ui, Helvetica",
                         "serif": "ui-serif, Georgia",
                 },

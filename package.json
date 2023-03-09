@@ -1,8 +1,33 @@
 {
-  "source": "src/*.qtpl",
+  "private": true,
+  "name": "xynoblog",
+  "version": "1.0.0",
+  "source": [
+    "./tmplsrc/basepage.qtpl",
+    "./tmplsrc/error.qtpl",
+    "./tmplsrc/index.qtpl",
+    "./tmplsrc/post.qtpl",
+    "./tmplsrc/posts.qtpl",
+    "./tmplsrc/simpleMdPage.qtpl"
+  ],
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "build": "parcel build"
+  },
   "targets": {
     "default": {
       "distDir": "./templates"
     }
-  }
+  },
+  "dependencies": {
+    "jetbrains-mono": "^1.0.6",
+    "parcel": "^2.8.3",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7"
+  },
+  "workspaces": [
+    "parcel-namer-split",
+    "parcel-resolver-qtpl",
+    "parcel-transformer-donothing"
+  ]
 }

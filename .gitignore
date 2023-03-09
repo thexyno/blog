@@ -1,7 +1,12 @@
 .direnv
+.parcel-cache/
+/tmplsrc/*.go
+/templates
+node_modules/
+dist/
 .DS_Store
 .log
-cssdist
+output.css
 blog.db
 result
 media/

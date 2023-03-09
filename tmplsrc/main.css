@@ -1,7 +1,4 @@
-@font-face {
-    font-family: JetBrainsMono;
-    src: url(/fonts/JetBrainsMono[wght].ttf);
-}
+@import 'npm:jetbrains-mono';
 
 @tailwind base;
 @tailwind components;
