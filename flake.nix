@@ -127,7 +127,7 @@
               nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.quicktemplate pkgs.pkg-config ];
               buildInputs = [ pkgs.libwebp ];
 
-              postConfigure = ''
+              preConfigure = ''
                 cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/{statics,templates} .
                 chmod +w -R statics templates
                 qtc -dir=templates
