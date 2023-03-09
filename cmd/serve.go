@@ -41,9 +41,6 @@ import (
 	"github.com/thexyno/xynoblog/server"
 )
 
-const cssDirKey = "cssdir"
-const staticDirKey = "staticdir"
-const fontDirKey = "fontdir"
 const listenKey = "listen"
 const releaseModeKey = "releaseMode"
 
@@ -53,10 +50,7 @@ var serveCmd = &cobra.Command{
 	Short: "Starts the xynoblog server",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		cssDir := viper.GetString(cssDirKey)
-		fontDir := viper.GetString(fontDirKey)
 		mediaDir := viper.GetString(mediaDirKey)
-		staticDir := viper.GetString(staticDirKey)
 		listen := viper.GetString(listenKey)
 		dbURI := viper.GetString(dbURIKey)
 		releaseMode := viper.GetBool(releaseModeKey)
@@ -70,12 +64,11 @@ var serveCmd = &cobra.Command{
 			}
 		}
 
-		log.Print(viper.GetString("fontdir"))
 		log.Printf("Starting Xynoblog on %s", listen)
 		database := db.NewDb(dbURI)
 		database.Seed()
-		log.Printf("Fontdir: %s, CSSDir: %s, StaticDir: %s, MediaDir: %s", fontDir, cssDir, staticDir, mediaDir)
-		mux := server.Mux(database, fontDir, cssDir, staticDir, mediaDir)
+		log.Printf("MediaDir: %s", mediaDir)
+		mux := server.Mux(database, mediaDir)
 		log.Printf("Started Xynoblog on %s", listen)
 		if releaseMode {
 			gin.SetMode(gin.ReleaseMode)
@@ -86,22 +79,6 @@ var serveCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	serveCmd.Flags().String(fontDirKey, "", "Directory containing JetBrainsMono[wght].ttf")
-	viper.BindPFlag(fontDirKey, serveCmd.Flags().Lookup(fontDirKey))
-
-	serveCmd.Flags().String(cssDirKey, "./cssdist", "Directory containing output.css (default should be fine)")
-	viper.BindPFlag(cssDirKey, serveCmd.Flags().Lookup(cssDirKey))
-	wd, err := os.Getwd()
-	if err != nil {
-		log.Panic(err)
-	}
-	serveCmd.Flags().String(staticDirKey, wd, "Directory containing the data folder")
-	viper.BindPFlag(staticDirKey, serveCmd.Flags().Lookup(staticDirKey))
 
 	serveCmd.Flags().String(listenKey, ":8080", "host/port to listen on")
 	viper.BindPFlag(listenKey, serveCmd.Flags().Lookup(listenKey))

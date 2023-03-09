@@ -30,7 +30,9 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 package main
 
-import "github.com/thexyno/xynoblog/cmd"
+import (
+	"github.com/thexyno/xynoblog/cmd"
+)
 
 func main() {
 	cmd.Execute()

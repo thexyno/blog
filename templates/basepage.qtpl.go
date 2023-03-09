@@ -69,7 +69,7 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
 	qw422016.N().S(`">-->
       <link href="/css/`)
 //line ../templates/basepage.qtpl:26
-	qw422016.E().S(strings.TrimSpace(statics.CSSFile))
+	qw422016.E().S(strings.TrimSpace(statics.CSSHashDir.GetHashNoErr("output.css")))
 //line ../templates/basepage.qtpl:26
 	qw422016.N().S(`" rel="stylesheet">
       <title>`)

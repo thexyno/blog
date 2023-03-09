@@ -1,0 +1,3 @@
+# some development settings
+mediadir: ./media
+db: ./blog.db

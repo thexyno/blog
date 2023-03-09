@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/thexyno/xynoblog/db"
+	"github.com/thexyno/xynoblog/statics"
 	"github.com/thexyno/xynoblog/templates"
 )
 
@@ -103,7 +104,7 @@ func renderSimpleMarkdownPage(title []byte, content []byte, index bool) func(*gi
 	}
 }
 
-func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string, mediadir string) *gin.Engine {
+func Mux(db db.DbConn, mediadir string) *gin.Engine {
 	r := gin.New()
 	log := log.New()
 
@@ -123,18 +124,26 @@ func Mux(db db.DbConn, fontdir string, cssdir string, staticdir string, mediadir
 	r.GET("/sitemap.xml", renderSitemap(db))
 	r.GET("/post/:id", renderPost(db))
 	r.HEAD("/post/:id", renderPost(db))
-	impressumDE, err := ioutil.ReadFile(staticdir + "/data/impressum.de.md")
+	impressumDEFile, err := statics.DataDir.Open("impressum.de.md")
+	if err != nil {
+		log.Panic(err)
+	}
+	impressumDE, err := ioutil.ReadAll(impressumDEFile)
+	if err != nil {
+		log.Panic(err)
+	}
+	err = impressumDEFile.Close()
 	if err != nil {
 		log.Panic(err)
 	}
 
 	r.GET("/impressum-de", renderSimpleMarkdownPage([]byte("Impressum/Imprint"), impressumDE, false))
 
-	r.Static("/css", cssdir)
-	r.Static("/fonts", fontdir)
+	r.StaticFS("/css", http.FS(&statics.CSSHashDir))
 	r.Static("/media", mediadir)
-	r.StaticFile("/favicon.ico", staticdir+"/data/favicon.ico")
-	r.StaticFile("/robots.txt", staticdir+"/data/robots.txt")
+	dataHttpFS := http.FS(statics.DataDir)
+	r.StaticFileFS("/favicon.ico", "favicon.ico", dataHttpFS)
+	r.StaticFileFS("/robots.txt", "robots.txt", dataHttpFS)
 
 	return r
 }
@@ -159,7 +168,7 @@ func hasPrefixes(str string, pref []string) bool {
 
 func cacheControl(c *gin.Context) {
 	path := c.Request.URL.Path
-	if hasSuffixes(path, []string{".css", ".txt", ".ico", ".ttf"}) || hasPrefixes(path, []string{"/media"}) {
+	if hasSuffixes(path, []string{".css", ".txt", ".ico", ".ttf"}) || hasPrefixes(path, []string{"/media", "/css"}) {
 		c.Header("Cache-control", "public, max-age=31536000")
 	}
 	c.Next()

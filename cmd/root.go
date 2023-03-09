@@ -69,11 +69,11 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is /etc/xynoblog/xynoblog.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./xynoblog.yaml)")
 	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
-	rootCmd.PersistentFlags().String(mediaDirKey, "./media", "Directory where blog images will be stored")
+	rootCmd.PersistentFlags().String(mediaDirKey, "/var/lib/xynoblog/media", "Directory where blog images will be stored")
 	viper.BindPFlag(mediaDirKey, rootCmd.PersistentFlags().Lookup(mediaDirKey))
-	rootCmd.PersistentFlags().String(dbURIKey, "./blog.db", "sqlite uri")
+	rootCmd.PersistentFlags().String(dbURIKey, "/var/lib/xynoblog/blog.db", "sqlite uri")
 	viper.BindPFlag(dbURIKey, rootCmd.PersistentFlags().Lookup(dbURIKey))
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -87,7 +87,7 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		// Search config in home directory with name ".xynoblog" (without extension).
-		viper.AddConfigPath("/etc/xynoblog")
+		viper.AddConfigPath(".")
 		viper.SetConfigType("yaml")
 		viper.SetConfigName("xynoblog.yaml")
 	}
