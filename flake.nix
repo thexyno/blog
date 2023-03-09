@@ -90,32 +90,49 @@
           xynoblog_tmpl =
             pkgs.mkYarnPackage rec {
               pname = "xynoblog_tmpl";
+              workspaceDependencies =
+                let
+                  deps = map
+                    (x:
+                      pkgs.mkYarnPackage {
+                        src = "${./packages}/${x}";
+                        yarnLock = src + "/yarn.lock";
+                        fixupPhase = "true";
+                        inherit version offlineCache;
+                      }
+                    )
+                    (builtins.attrNames (builtins.readDir ./packages));
+                in
+                deps;
               inherit version;
               offlineCache = pkgs.fetchYarnDeps {
                 yarnLock = src + "/yarn.lock";
                 sha256 = "sha256-mSxDAI1PQ3muGnNbkqha4nV5S5htk4gaO6gbh/Z3Zfk=";
               };
               src = ./.;
-              packageJSON = ./package.json;
               distPhase = "true";
+              installPhase = "true";
+              fixupPhase = "true";
               buildPhase = ''
                 export HOME=$(mktemp -d)
                 echo $node_modules
-                yarn --offline build
+                mkdir -p $out/templates
+                yarn --offline build --dist-dir $out/templates
               '';
             };
           xynoblog =
-            pkgs.buildGo118Module rec {
+            pkgs.buildGoModule rec {
               pname = "xynoblog";
               inherit version;
               # In 'nix develop', we don't need a copy of the source tree
               # in the Nix store.
               src = ./.;
-              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper ];
+              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.quicktemplate ];
               buildInputs = [ pkgs.libwebp ];
 
               preBuild = ''
-                cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/* .
+                cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/{statics,templates} .
+                chmod +w -R statics templates
                 go generate ./...
               '';
 
@@ -155,8 +172,7 @@
       devShell = forAllSystems (system:
         let pkgs = nixpkgsFor.${system}; in
         (pkgs.mkShell {
-          XYNOBLOG_FONTDIR = "${pkgs.jetbrains-mono}/share/fonts/truetype";
-          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go_1_18 pkgs.lefthook pkgs.libwebp pkgs.yarn2nix pkgs.yarn ];
+          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go pkgs.lefthook pkgs.libwebp pkgs.yarn ];
         }));
     };
 }

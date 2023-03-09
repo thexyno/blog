@@ -12,12 +12,8 @@
   ],
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
-    "build": "parcel build"
-  },
-  "targets": {
-    "default": {
-      "distDir": "./templates"
-    }
+    "build": "parcel build",
+    "start": "parcel build --out-dir ./templates && go generate ./... && go run main.go serve"
   },
   "dependencies": {
     "jetbrains-mono": "^1.0.6",
@@ -25,9 +21,7 @@
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }
