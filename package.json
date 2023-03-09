@@ -13,7 +13,7 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "build": "parcel build",
-    "start": "parcel build --out-dir ./templates && go generate ./... && go run main.go serve"
+    "start": "parcel build --dist-dir ./templates && go generate ./... && go run main.go serve"
   },
   "dependencies": {
     "jetbrains-mono": "^1.0.6",

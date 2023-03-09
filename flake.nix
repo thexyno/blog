@@ -57,10 +57,7 @@
             users.groups.xynoblog = { };
 
             environment.systemPackages = [
-              (pkgs.writeScriptBin "xynoblog" ''
-                #!/bin/sh
-                exec ${xb}/bin/xynoblog --db /var/lib/${cfg.stateDirectory}/blog.db --mediadir /var/lib/${cfg.stateDirectory}/media "$@"
-              '')
+              xb
             ];
 
             systemd.services.xynoblog = {
@@ -127,24 +124,16 @@
               # In 'nix develop', we don't need a copy of the source tree
               # in the Nix store.
               src = ./.;
-              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.quicktemplate ];
+              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.quicktemplate pkgs.pkg-config ];
               buildInputs = [ pkgs.libwebp ];
 
-              preBuild = ''
+              postConfigure = ''
                 cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/{statics,templates} .
                 chmod +w -R statics templates
-                go generate ./...
+                qtc -dir=templates
               '';
 
-              preFixup = ''
-                wrapProgram $out/bin/xynoblog \
-                  --prefix XYNOBLOG_STATICDIR : "$out/share/xynoblog" \
-                  --prefix GIN_MODE : "release" \
-                  --prefix XYNOBLOG_RELEASEMODE : "true"
-              '';
               postInstall = ''
-                mkdir -p $out/share/xynoblog
-                cp -r ./data $out/share/xynoblog/data
                 installShellCompletion --cmd ${pname} \
                   --bash <($out/bin/${pname} completion bash) \
                   --fish <($out/bin/${pname} completion fish) \
@@ -161,7 +150,7 @@
               # remeber to bump this hash when your dependencies change.
               #vendorSha256 = pkgs.lib.fakeSha256;
 
-              vendorSha256 = "sha256-EgM7902IswosjKuyLy4aJEuVwVNEveUXexjbWoljIcc=";
+              vendorSha256 = "sha256-qHkWsi29GbpyRt5mIovR3N6gp9oj/Ku7MiIj9iIZ0iI=";
             };
         });
 

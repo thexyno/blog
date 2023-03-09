@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
@@ -14,6 +15,18 @@ import (
 	"github.com/thexyno/xynoblog/statics"
 	"github.com/thexyno/xynoblog/templates"
 )
+
+var serverStart = time.Now()
+
+func maxTime(t ...time.Time) time.Time {
+	max := t[0]
+	for _, x := range t {
+		if x.After(max) {
+			max = x
+		}
+	}
+	return max
+}
 
 func renderError(c *gin.Context, err error) {
 	log.WithField("request", c.FullPath()).Error(err)
@@ -40,7 +53,7 @@ func renderPosts(db db.DbConn) func(*gin.Context) {
 			return
 		}
 		if len(posts) > 0 {
-			c.Header("Last-Modified", posts[0].Created.Format(http.TimeFormat))
+			c.Header("Last-Modified", maxTime(serverStart, posts[0].Created).Format(http.TimeFormat))
 		}
 		p := &templates.PostsPage{
 			Posts: posts,
@@ -56,7 +69,7 @@ func renderIndex(db db.DbConn) func(*gin.Context) {
 			return
 		}
 		if len(posts) > 0 {
-			c.Header("Last-Modified", posts[0].Created.Format(http.TimeFormat))
+			c.Header("Last-Modified", maxTime(serverStart, posts[0].Created).Format(http.TimeFormat))
 		}
 		p := &templates.IndexPage{
 			Posts: posts,
@@ -79,7 +92,7 @@ func renderPost(db db.DbConn) func(*gin.Context) {
 			return
 		}
 		if !gin.IsDebugging() {
-			c.Header("Last-Modified", post.Updated.Format(http.TimeFormat))
+			c.Header("Last-Modified", maxTime(serverStart, post.Updated).Format(http.TimeFormat))
 		}
 		rendered := Render(post)
 		p := &templates.PostPage{
@@ -168,7 +181,7 @@ func hasPrefixes(str string, pref []string) bool {
 
 func cacheControl(c *gin.Context) {
 	path := c.Request.URL.Path
-	if hasSuffixes(path, []string{".css", ".txt", ".ico", ".ttf"}) || hasPrefixes(path, []string{"/media", "/css"}) {
+	if hasSuffixes(path, []string{".css", ".txt", ".ico", ".ttf"}) || hasPrefixes(path, []string{"/statics", "/media"}) {
 		c.Header("Cache-control", "public, max-age=31536000")
 	}
 	c.Next()
