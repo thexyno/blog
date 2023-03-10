@@ -2,7 +2,7 @@
   description = "A simple Go package";
 
   # Nixpkgs / NixOS version to use.
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11"; # Tailwind isn't in 21.11
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
 
   outputs = { self, nixpkgs }:
     let
@@ -113,7 +113,8 @@
               buildPhase = ''
                 export HOME=$(mktemp -d)
                 echo $node_modules
-                mkdir -p $out/templates
+                mkdir $out
+                mkdir $out/templates
                 yarn --offline build --dist-dir $out/templates
               '';
             };
@@ -127,7 +128,7 @@
               nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.quicktemplate pkgs.pkg-config ];
               buildInputs = [ pkgs.libwebp ];
 
-              preConfigure = ''
+              postConfigure = ''
                 cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/{statics,templates} .
                 chmod +w -R statics templates
                 qtc -dir=templates
@@ -150,7 +151,7 @@
               # remeber to bump this hash when your dependencies change.
               #vendorSha256 = pkgs.lib.fakeSha256;
 
-              vendorSha256 = "sha256-qHkWsi29GbpyRt5mIovR3N6gp9oj/Ku7MiIj9iIZ0iI=";
+              vendorSha256 = "sha256-zuaqBNNUEd7JCq3NlzekgDNbrONg7hc7OGZ3sZkpsA0";
             };
         });
 
