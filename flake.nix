@@ -127,9 +127,8 @@
               nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.pkg-config ];
               buildInputs = [ pkgs.libwebp ];
 
-              preConfigure = ''
+              preBuild = ''
                 cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/statics .
-                chmod +w -R ./{statics,templates}
               '';
 
               postInstall = ''
