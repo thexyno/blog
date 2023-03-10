@@ -113,8 +113,7 @@
               buildPhase = ''
                 export HOME=$(mktemp -d)
                 echo $node_modules
-                mkdir $out
-                mkdir $out/templates
+                mkdir -p $out/templates
                 yarn --offline build --dist-dir $out/templates
               '';
             };
@@ -130,7 +129,7 @@
 
               preConfigure = ''
                 cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/{statics,templates} .
-                chmod +w -R statics templates
+                chmod +w -R ./{statics,templates}
                 qtc -dir=templates
               '';
 
