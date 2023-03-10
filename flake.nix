@@ -115,7 +115,9 @@
                 export HOME=$(mktemp -d)
                 echo $node_modules
                 mkdir -p $out/templates
+                chmod 755 $out
                 yarn --offline build --dist-dir $out/templates
+                cp -rv $src/* $out/
                 qtc -dir=$out/templates
               '';
             };
@@ -125,13 +127,9 @@
               inherit version;
               # In 'nix develop', we don't need a copy of the source tree
               # in the Nix store.
-              src = ./.;
+              src = "${self.packages.${pkgs.system}.xynoblog_tmpl}";
               nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.pkg-config ];
               buildInputs = [ pkgs.libwebp ];
-
-              preConfigure = ''
-                cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/{statics,templates} .
-              '';
 
               postInstall = ''
                 installShellCompletion --cmd ${pname} \
