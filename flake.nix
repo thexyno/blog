@@ -72,6 +72,7 @@
                 ProtectHome = "true";
                 ProtectSystem = "strict";
                 AmbientCapabilities = "CAP_NET_BIND_SERVICE";
+                Environment = "GIN_MODE=release";
                 ExecStart = "${xb}/bin/xynoblog serve --listen \"${cfg.listen}\" --db /var/lib/${cfg.stateDirectory}/blog.db --mediadir /var/lib/${cfg.stateDirectory}/media";
                 StateDirectory = cfg.stateDirectory;
               };
