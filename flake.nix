@@ -110,11 +110,13 @@
               distPhase = "true";
               installPhase = "true";
               fixupPhase = "true";
+              nativeBuildInputs = [ pkgs.quicktemplate ];
               buildPhase = ''
                 export HOME=$(mktemp -d)
                 echo $node_modules
                 mkdir -p $out/templates
                 yarn --offline build --dist-dir $out/templates
+                qtc -dir=$out/templates
               '';
             };
           xynoblog =
@@ -124,13 +126,11 @@
               # In 'nix develop', we don't need a copy of the source tree
               # in the Nix store.
               src = ./.;
-              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.quicktemplate pkgs.pkg-config ];
+              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.pkg-config ];
               buildInputs = [ pkgs.libwebp ];
 
               preConfigure = ''
                 cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/{statics,templates} .
-                chmod +w -R ./{statics,templates}
-                qtc -dir=templates
               '';
 
               postInstall = ''
