@@ -124,11 +124,13 @@
               # In 'nix develop', we don't need a copy of the source tree
               # in the Nix store.
               src = ./.;
-              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.pkg-config ];
+              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.quicktemplate pkgs.pkg-config ];
               buildInputs = [ pkgs.libwebp ];
 
-              preBuild = ''
-                cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/statics .
+              preConfigure = ''
+                cp -r ${self.packages.${pkgs.system}.xynoblog_tmpl}/{statics,templates} .
+                chmod +w -R ./{statics,templates}
+                qtc -dir=templates
               '';
 
               postInstall = ''
@@ -148,7 +150,7 @@
               # remeber to bump this hash when your dependencies change.
               #vendorSha256 = pkgs.lib.fakeSha256;
 
-              vendorSha256 = "sha256-zuaqBNNUEd7JCq3NlzekgDNbrONg7hc7OGZ3sZkpsA0";
+              vendorSha256 = "sha256-qHkWsi29GbpyRt5mIovR3N6gp9oj/Ku7MiIj9iIZ0iI=";
             };
         });
 
