@@ -1,3 +1,4 @@
+//go:generate go get -d github.com/valyala/quicktemplate/qtc
 //go:generate qtc -dir=../templates
 package server
 
