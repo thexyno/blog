@@ -32,7 +32,7 @@ Page {
       </header>
       {%= p.Body() %}
       <footer class="flex flex-col items-center justify-center bottom-0 pb-2 pt-12 backdrop-blur">
-        <p>Copyright (C) {%d t.Now().Year() %} xyno (Philipp Hochkamp)</p>
+        <p>Copyright (C) {%d t.Now().Year() %} Lucy Hochkamp</p>
         <br>
         <p>
           <a href="/impressum-de">Impressum / Datenschutzerklärung</a>
