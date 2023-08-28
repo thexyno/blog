@@ -6,7 +6,7 @@
       "@parcel/transformer-posthtml",
       "@parcel/transformer-html"
     ],
-    "*.jsonld": ["parcel-transformer-donothing"]
+    "*.jsonld": ["@parcel/transformer-raw", "@parcel/transformer-inline-string"]
   },
   "packagers": {
     "*.qtpl": "@parcel/packager-html"

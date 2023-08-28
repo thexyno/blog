@@ -1,7 +1,10 @@
 .direnv
+
 .parcel-cache/
+/statics/dist/
 /tmplsrc/*.go
 /templates/*.qtpl.go
+/templates/*.qtpl
 node_modules/
 dist/
 .DS_Store

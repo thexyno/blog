@@ -23,6 +23,7 @@ Page {
       <!--<meta name="description" content="{%= p.Description() %}">-->
       <link href="main.css" rel="stylesheet">
       <title>{%= p.Title() %}</title>
+      <script defer data-domain="xyno.space" src="https://xyno.space/gyakapyukawfyuokfgwtyutf.js"></script>
       {%= p.Head() %}
     </head>
     <body class="px-4 mx-2 mx-auto max-w-6xl">

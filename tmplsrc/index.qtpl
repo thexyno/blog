@@ -31,8 +31,8 @@ type IndexPage struct {
         <li>Typescript/Javascript</li>
         <ul>
           <li>React</li>
+          <li>SolidJS</li>
           <li>Angular</li>
-          <li>Nest.JS</li>
         </ul>
       </ul>
       <ul>

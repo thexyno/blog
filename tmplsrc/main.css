@@ -1,4 +1,4 @@
-@import 'npm:jetbrains-mono';
+@import 'npm:@fontsource-variable/jetbrains-mono/wght-italic.css';
 
 @tailwind base;
 @tailwind components;
@@ -17,10 +17,17 @@
         @apply pt-2 pb-1 font-semibold text-2xl text-dark1 dark:text-light1
     }
     h2 {
-        @apply pt-2 pb-1 font-semibold text-xl text-bright_orange
+        @apply pt-2 pb-1 font-semibold text-xl dark:text-bright_orange text-faded_orange
     }
     h3 {
-        @apply pt-2 pb-1 font-semibold text-lg text-bright_orange
+        @apply pt-2 pb-1 font-semibold text-lg dark:text-bright_orange text-faded_orange
+    }
+    h4 {
+        @apply pt-2 pb-1 font-semibold text-base dark:text-bright_orange text-faded_orange
+    }
+    hr {
+        @apply pt-2 pb-1 
+
     }
     ul {
         @apply list-disc pl-6
@@ -29,7 +36,7 @@
         @apply list-decimal pl-11
     }
     p {
-      @apply pt-1
+      @apply pt-2
     }
     hr {
       @apply my-2

@@ -12,16 +12,20 @@
   ],
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
-    "build": "parcel build",
+    "build": "parcel build --dist-dir ./templates",
     "start": "parcel build --dist-dir ./templates && go generate ./... && go run main.go serve"
   },
   "dependencies": {
-    "jetbrains-mono": "^1.0.6",
-    "parcel": "^2.8.3",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.7"
+    "@fontsource-variable/jetbrains-mono": "^5.0.9",
+    "parcel": "^2.9.3"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "@parcel/transformer-inline-string": "^2.9.3",
+    "postcss": "^8.4.28",
+    "autoprefixer": "^10.4.15",
+    "tailwindcss": "^3.3.3"
+  }
 }
