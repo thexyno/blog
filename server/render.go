@@ -133,7 +133,7 @@ func Render(post db.Post) []byte {
 	}
 
 	parser := parser.NewWithExtensions(parser.CommonExtensions | parser.AutoHeadingIDs)
-	opts := html.RendererOptions{Flags: html.CommonFlags, RenderNodeHook: renderHook}
+	opts := html.RendererOptions{Flags: html.CommonFlags | html.HrefTargetBlank | html.FootnoteReturnLinks, RenderNodeHook: renderHook}
 	renderer := html.NewRenderer(opts)
 	bytes := markdown.ToHTML([]byte(post.Content), parser, renderer)
 	renderCache.Store(idu, bytes)
