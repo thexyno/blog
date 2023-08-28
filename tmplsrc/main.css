@@ -6,24 +6,24 @@
 
 @layer base {
     html {
-        @apply font-mono dark:bg-dark0 bg-light0 text-dark0 dark:text-light0 text-sm leading-relaxed
+        @apply font-mono dark:bg-dark0 bg-l_base text-l_text dark:text-light0 text-sm leading-relaxed
     }
     article {
     }
     a {
-        @apply text-neutral_yellow hover:text-bright_yellow visited:text-faded_yellow
+        @apply dark:text-neutral_yellow hover:dark:text-bright_yellow visited:dark:text-faded_yellow text-l_blue hover:text-l_sky visited:text-l_lavender
     }
     h1 {
-        @apply pt-2 pb-1 font-semibold text-2xl text-dark1 dark:text-light1
+        @apply pt-2 pb-1 font-semibold text-2xl text-l_subtext0 dark:text-light1
     }
     h2 {
-        @apply pt-2 pb-1 font-semibold text-xl dark:text-bright_orange text-faded_orange
+        @apply pt-2 pb-1 font-semibold text-xl dark:text-bright_orange text-l_subtext1
     }
     h3 {
-        @apply pt-2 pb-1 font-semibold text-lg dark:text-bright_orange text-faded_orange
+        @apply pt-2 pb-1 font-semibold text-lg dark:text-bright_orange text-l_subtext1
     }
     h4 {
-        @apply pt-2 pb-1 font-semibold text-base dark:text-bright_orange text-faded_orange
+        @apply pt-2 pb-1 font-semibold text-base dark:text-bright_orange text-l_subtext1
     }
     hr {
         @apply pt-2 pb-1 
@@ -41,41 +41,41 @@
     hr {
       @apply my-2
     }
-    code { @apply text-dark1 dark:text-light1 bg-light1 dark:bg-dark1 p-0.5 }
+    code { @apply text-l_text dark:text-light1 bg-l_surface0 dark:bg-dark1 p-0.5 }
 }
     .box {
       @apply px-5
              py-2
              my-2
              dark:text-light3
-             text-dark3
+             text-l_subtext1
              border-2
              dark:border-bright_red
-             border-faded_red
+             border-l_red
     }
     .greybox {
       @apply px-5
              py-2
              my-2
              dark:text-light3
-             text-dark3
+             text-l_subtext1
              border-2
              dark:border-light3
-             border-dark3
+             border-l_surface2
     }
     .tangent {
       @apply px-5
              py-2
              my-2
              dark:text-light3
-             text-dark3
+             text-l_subtext1
              border-2
              dark:border-light3
-             border-dark3
+             border-l_surface2
              before:dark:text-light0
-             before:text-dark0
+/*             before:text-l_overlay0*/
              before:dark:bg-dark0
-             before:bg-light0
+             before:bg-l_surface2
              before:block
              before:w-min
              before:mt-[-1.5rem]
@@ -85,7 +85,7 @@
              before:content-['tangent']
     }
     .chroma code { width: 0; height: 0; margin: 0; padding: 0; } /* Created by the code formatter, but i don't want it */
-    /* Background */ .chroma { @apply text-dark1 dark:text-light1 bg-light0_soft dark:bg-dark0_soft px-2 py-2 my-2 overflow-x-auto max-w-full }
+    /* Background */ .chroma { @apply text-l_text dark:text-light1 bg-l_crust dark:bg-dark0_soft px-2 py-2 my-2 overflow-x-auto max-w-full }
     /* Error */ .chroma .err { color: #ff0000 }
     /* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
     /* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
@@ -93,46 +93,46 @@
     /* LineNumbersTable */ .chroma .lnt { white-space: pre; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
     /* LineNumbers */ .chroma .ln { white-space: pre; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #727272 }
     /* Line */ .chroma .line { display: flex; }
-    /* Keyword */ .chroma .k { @apply font-bold text-faded_orange dark:text-bright_orange }
-    /* KeywordConstant */ .chroma .kc { @apply text-faded_orange dark:text-bright_orange }
-    /* KeywordDeclaration */ .chroma .kd { @apply text-faded_orange dark:text-bright_orange }
-    /* KeywordNamespace */ .chroma .kn { @apply text-faded_orange dark:text-bright_orange }
-    /* KeywordPseudo */ .chroma .kp { @apply text-faded_orange dark:text-bright_orange }
-    /* KeywordReserved */ .chroma .kr { @apply text-faded_orange dark:text-bright_orange }
-    /* KeywordType */ .chroma .kt { @apply text-faded_yellow dark:text-bright_yellow }
-    /* NameAttribute */ .chroma .na { @apply font-bold text-faded_green dark:text-bright_green }
-    /* NameBuiltin */ .chroma .nb { @apply text-faded_yellow dark:text-bright_yellow }
-    /* NameTag */ .chroma .nt { @apply text-faded_red dark:text-bright_red }
-    /* LiteralDate */ .chroma .ld { @apply text-faded_green dark:text-bright_green }
-    /* LiteralString */ .chroma .s { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringAffix */ .chroma .sa { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringBacktick */ .chroma .sb { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringChar */ .chroma .sc { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringDelimiter */ .chroma .dl { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringDoc */ .chroma .sd { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringDouble */ .chroma .s2 { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringEscape */ .chroma .se { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringHeredoc */ .chroma .sh { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringInterpol */ .chroma .si { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringOther */ .chroma .sx { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringRegex */ .chroma .sr { @apply text-faded_green dark:text-bright_green }
-    /* LiteralStringSingle */ .chroma .s1 { @apply text-faded_green dark:text-bright_green }
+    /* Keyword */ .chroma .k { @apply font-bold text-l_mauve dark:text-bright_orange }
+    /* KeywordConstant */ .chroma .kc { @apply text-l_mauve dark:text-bright_orange }
+    /* KeywordDeclaration */ .chroma .kd { @apply text-l_mauve dark:text-bright_orange }
+    /* KeywordNamespace */ .chroma .kn { @apply text-l_mauve dark:text-bright_orange }
+    /* KeywordPseudo */ .chroma .kp { @apply text-l_mauve dark:text-bright_orange }
+    /* KeywordReserved */ .chroma .kr { @apply text-l_mauve dark:text-bright_orange }
+    /* KeywordType */ .chroma .kt { @apply text-l_mauve dark:text-bright_yellow }
+    /* NameAttribute */ .chroma .na { @apply font-bold text-l_green dark:text-bright_green }
+    /* NameBuiltin */ .chroma .nb { @apply text-l_mauve dark:text-bright_yellow }
+    /* NameTag */ .chroma .nt { @apply text-l_yellow dark:text-bright_red }
+    /* LiteralDate */ .chroma .ld { @apply text-l_green dark:text-bright_green }
+    /* LiteralString */ .chroma .s { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringAffix */ .chroma .sa { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringBacktick */ .chroma .sb { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringChar */ .chroma .sc { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringDelimiter */ .chroma .dl { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringDoc */ .chroma .sd { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringDouble */ .chroma .s2 { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringEscape */ .chroma .se { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringHeredoc */ .chroma .sh { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringInterpol */ .chroma .si { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringOther */ .chroma .sx { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringRegex */ .chroma .sr { @apply text-l_green dark:text-bright_green }
+    /* LiteralStringSingle */ .chroma .s1 { @apply text-l_green dark:text-bright_green }
     /* LiteralStringSymbol */ .chroma .ss { @apply text-faded_blue dark:text-bright_blue }
-    /* LiteralNumber */ .chroma .m { @apply text-faded_purple dark:text-bright_purple }
-    /* LiteralNumberBin */ .chroma .mb { @apply text-faded_purple dark:text-bright_purple }
-    /* LiteralNumberFloat */ .chroma .mf { @apply text-faded_purple dark:text-bright_purple }
-    /* LiteralNumberHex */ .chroma .mh { @apply text-faded_purple dark:text-bright_purple }
-    /* LiteralNumberInteger */ .chroma .mi { @apply text-faded_purple dark:text-bright_purple }
-    /* LiteralNumberIntegerLong */ .chroma .il { @apply text-faded_purple dark:text-bright_purple }
-    /* LiteralNumberOct */ .chroma .mo { @apply text-faded_purple dark:text-bright_purple }
-    /* Comment */ .chroma .c { @apply italic text-gray dark:text-gray }
-    /* CommentHashbang */ .chroma .ch { @apply italic text-gray dark:text-gray }
-    /* CommentMultiline */ .chroma .cm { @apply italic text-gray dark:text-gray }
-    /* CommentSingle */ .chroma .c1 { @apply italic text-gray dark:text-gray }
-    /* CommentSpecial */ .chroma .cs { @apply italic text-gray dark:text-gray }
-    /* CommentPreproc */ .chroma .cp { @apply italic text-bright_aqua dark:text-bright_aqua }
-    /* CommentPreprocFile */ .chroma .cpf { @apply italic text-bright_aqua dark:text-bright_aqua }
-    /* GenericHeading */ .chroma .gh { @apply font-bold text-bright_green dark:text-bright_green }
-    /* GenericStrong */ .chroma .gs { @apply dark:text-light1 text-dark1 }
-    /* GenericSubheading */ .chroma .gu { @apply font-bold text-bright_green dark:text-bright_green }
+    /* LiteralNumber */ .chroma .m { @apply text-l_peach dark:text-bright_purple }
+    /* LiteralNumberBin */ .chroma .mb { @apply text-l_peach dark:text-bright_purple }
+    /* LiteralNumberFloat */ .chroma .mf { @apply text-l_peach dark:text-bright_purple }
+    /* LiteralNumberHex */ .chroma .mh { @apply text-l_peach dark:text-bright_purple }
+    /* LiteralNumberInteger */ .chroma .mi { @apply text-l_peach dark:text-bright_purple }
+    /* LiteralNumberIntegerLong */ .chroma .il { @apply text-l_peach dark:text-bright_purple }
+    /* LiteralNumberOct */ .chroma .mo { @apply text-l_peach dark:text-bright_purple }
+    /* Comment */ .chroma .c { @apply italic text-l_subtext0 dark:text-gray }
+    /* CommentHashbang */ .chroma .ch { @apply italic text-l_subtext0 dark:text-gray }
+    /* CommentMultiline */ .chroma .cm { @apply italic text-l_subtext0 dark:text-gray }
+    /* CommentSingle */ .chroma .c1 { @apply italic text-l_subtext0 dark:text-gray }
+    /* CommentSpecial */ .chroma .cs { @apply italic text-l_subtext0 dark:text-gray }
+    /* CommentPreproc */ .chroma .cp { @apply italic text-l_subtext0 dark:text-bright_aqua }
+    /* CommentPreprocFile */ .chroma .cpf { @apply italic text-l_subtext0 dark:text-bright_aqua }
+    /* GenericHeading */ .chroma .gh { @apply font-bold text-l_subtext0 dark:text-bright_green }
+    /* GenericStrong */ .chroma .gs { @apply dark:text-light1 text-l_subtext0 }
+    /* GenericSubheading */ .chroma .gu { @apply font-bold text-l_subtext0 dark:text-bright_green }
     /* GenericUnderline */ .chroma .gl { text-decoration: underline }
