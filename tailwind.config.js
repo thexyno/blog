@@ -34,7 +34,7 @@ module.exports = {
 	l_surface2: "#acb0be",
 	l_surface1: "#bcc0cc",
 	l_surface0: "#ccd0da",
-	l_base: "#eff1f5",
+	l_base: "#eeeeee",
 	l_mantle: "#e6e9ef",
 	l_crust: "#dce0e8",
         dark0_hard: '#1d2021',
