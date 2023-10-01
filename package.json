@@ -2,18 +2,11 @@
   "private": true,
   "name": "xynoblog",
   "version": "1.0.0",
-  "source": [
-    "./tmplsrc/basepage.qtpl",
-    "./tmplsrc/error.qtpl",
-    "./tmplsrc/index.qtpl",
-    "./tmplsrc/post.qtpl",
-    "./tmplsrc/posts.qtpl",
-    "./tmplsrc/simpleMdPage.qtpl"
-  ],
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
-    "build": "parcel build --dist-dir ./templates",
-    "start": "parcel build --dist-dir ./templates && go generate ./... && go run main.go serve"
+    "build": "parcel build ./tmplsrc/*.qtpl",
+    "clean": "rm -rf ./templates/*.qtpl ./templates/*.qtpl.go ./statics/dist .parcel-cache",
+    "start": "yarn run clean && yarn run build --dist-dir ./templates && go generate ./... && go run main.go serve"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.0.9",

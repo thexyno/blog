@@ -1,8 +1,9 @@
 package server
 
 import (
+	"bytes"
 	"io"
-	"regexp"
+	"strings"
 	"sync"
 
 	chromahtml "github.com/alecthomas/chroma/formatters/html"
@@ -13,11 +14,33 @@ import (
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
 	"github.com/thexyno/xynoblog/db"
+	"github.com/thexyno/xynoblog/templates"
+	xhtml "golang.org/x/net/html"
 
 	log "github.com/sirupsen/logrus"
 )
 
 var renderCache sync.Map
+
+type component struct {
+	start func(w io.Writer, props map[string]string)
+	end   func(w io.Writer, props map[string]string)
+}
+
+var components = map[string]component{
+	"tangent": {
+		start: templates.WriteTangentStart,
+		end:   templates.WriteTangentEnd,
+	},
+	"box": {
+		start: templates.WriteBoxStart,
+		end:   templates.WriteBoxEnd,
+	},
+	"greybox": {
+		start: templates.WriteGreyBoxStart,
+		end:   templates.WriteGreyBoxEnd,
+	},
+}
 
 func renderHook(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
 	_, ok := node.(*ast.CodeBlock)
@@ -54,26 +77,21 @@ func renderHTMLBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus,
 	}
 
 	b := n.Literal
-	r, err := regexp.Compile("< *(/?)(.*) *>")
-	if err != nil {
-		log.Error(err)
-		return ast.GoToNext, false
-	}
-	b2 := r.FindSubmatch(b)
-	closing := len(b2[1]) > 0
-	tag := b2[2]
-	allowedTags := [][]byte{[]byte("tangent"), []byte("box"), []byte("greybox")}
-	if contains(allowedTags, tag) {
-		if !closing {
-			w.Write([]byte("<div class=\""))
-			w.Write(tag)
-			w.Write([]byte("\">"))
-		} else {
-			w.Write([]byte("</div>"))
+	tkn := xhtml.NewTokenizer(bytes.NewReader(b))
+	tkn.Next()
+	token := tkn.Token()
+	for k, v := range components {
+		if strings.ToLower(token.Data) == strings.ToLower(k) {
+			if token.Type == xhtml.StartTagToken {
+				v.start(w, nil)
+			} else {
+				v.end(w, nil)
+			}
+			return ast.GoToNext, true
 		}
 	}
 
-	return ast.GoToNext, true
+	return ast.GoToNext, false
 }
 
 func equals(arr []byte, x []byte) bool {

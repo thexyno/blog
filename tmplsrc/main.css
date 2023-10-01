@@ -44,47 +44,6 @@
     }
     code { @apply text-l_text dark:text-light1 bg-l_surface0 dark:bg-dark1 p-0.5 }
 }
-    .box {
-      @apply px-5
-             py-2
-             my-2
-             dark:text-light3
-             text-l_subtext1
-             border-2
-             dark:border-bright_red
-             border-l_red
-    }
-    .greybox {
-      @apply px-5
-             py-2
-             my-2
-             dark:text-light3
-             text-l_subtext1
-             border-2
-             dark:border-light3
-             border-l_surface2
-    }
-    .tangent {
-      @apply px-5
-             py-2
-             my-2
-             dark:text-light3
-             text-l_subtext1
-             border-2
-             dark:border-light3
-             border-l_surface2
-             before:dark:text-light0
-/*             before:text-l_overlay0*/
-             before:dark:bg-dark0
-             before:bg-l_base
-             before:block
-             before:w-min
-             before:mt-[-1.5rem]
-             before:ml-[-0.5rem]
-             before:ml-[-0.5rem]
-             before:p-1
-             before:content-['tangent']
-    }
     .chroma code { width: 0; height: 0; margin: 0; padding: 0; } /* Created by the code formatter, but i don't want it */
     /* Background */ .chroma { @apply text-l_text dark:text-light1 bg-l_crust dark:bg-dark0_soft px-2 py-2 my-2 overflow-x-auto max-w-full }
     /* Error */ .chroma .err { color: #ff0000 }

@@ -1,0 +1,9 @@
+{% func TangentStart(props map[string]string) %}
+<div class="border-2 px-5 py-2 dark:text-light3 text-l_subtext1 border-l_surface2 dark:border-light3">
+  <div class="block -mt-5 px-2 dark:bg-dark0 bg-l_base w-min">tangent</div>
+{% endfunc %}
+
+{% func TangentEnd(props map[string]string) %}
+</div>
+{% endfunc %}
+
