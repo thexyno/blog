@@ -1,5 +1,6 @@
 {% import (
    t "time"
+   "github.com/thexyno/xynoblog/statics"
    )
 %}
 
@@ -32,9 +33,8 @@ Page {
         <a class="mr-3 text-xl flex-none overflow-hidden md:w-auto" href="/posts">Blog</a>
       </header>
       {%= p.Body() %}
-      <footer class="flex flex-col items-center justify-center bottom-0 pb-2 pt-12 backdrop-blur">
-        <p>Copyright (C) {%d t.Now().Year() %} Lucy Hochkamp</p>
-        <br>
+      <footer class="flex flex-col items-center justify-center bottom-0 pb-2 pt-8">
+        <p class="pb-2">Copyright (C) {%d t.Now().Year() %} {%s statics.AuthorName %}</p>
         <p>
           <a href="/impressum-de">Impressum / Datenschutzerklärung</a>
         </p>

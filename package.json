@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.0.9",
+    "@fontsource/source-sans-pro": "^5.0.8",
     "parcel": "^2.9.3"
   },
   "workspaces": [
@@ -17,8 +18,8 @@
   ],
   "devDependencies": {
     "@parcel/transformer-inline-string": "^2.9.3",
-    "postcss": "^8.4.28",
     "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.28",
     "tailwindcss": "^3.3.3"
   }
 }

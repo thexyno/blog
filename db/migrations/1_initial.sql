@@ -1,3 +1,4 @@
+-- +migrate Up
 CREATE TABLE posts (post_id text primary key not null,
                     title text not null,
                     content text not null,
@@ -11,3 +12,7 @@ CREATE TABLE post_tags (post_id text not null,
                           REFERENCES posts (post_id),
                         PRIMARY KEY (post_id, tag) -- it's all a primary key
 );
+
+-- +migrate Down
+DROP TABLE post_tags;
+DROP TABLE posts;

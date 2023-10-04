@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/feeds"
 	log "github.com/sirupsen/logrus"
 	"github.com/thexyno/xynoblog/db"
+	"github.com/thexyno/xynoblog/statics"
 )
 
 func generateFeed(dbc db.DbConn) (*feeds.Feed, error) {
@@ -33,9 +34,9 @@ func generateFeed(dbc db.DbConn) (*feeds.Feed, error) {
 		Title:       "xyno - Blog",
 		Link:        &feeds.Link{Href: "https://xyno.space"},
 		Description: "A Blog about Software Engineering, Hardware, NixOS, and more",
-		Author:      &feeds.Author{Name: "xyno", Email: "blog@xyno.space"},
+		Author:      &feeds.Author{Name: statics.AuthorName, Email: "blog@xyno.space"},
 		Updated:     newest,
-		Copyright:   fmt.Sprint("(c) ", time.Now().Year(), " xyno (Philipp Hochkamp)"),
+		Copyright:   fmt.Sprint("(c) ", time.Now().Year(), statics.AuthorName),
 		Created:     time.Date(2022, 5, 27, 23, 12, 4, 0, time.UTC),
 		Items:       items,
 	}, nil

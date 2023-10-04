@@ -1,5 +1,17 @@
 @import 'npm:@fontsource-variable/jetbrains-mono/wght-italic.css';
 @import 'npm:@fontsource-variable/jetbrains-mono';
+@import 'npm:@fontsource/source-sans-pro/200-italic.css';
+@import 'npm:@fontsource/source-sans-pro/300-italic.css';
+@import 'npm:@fontsource/source-sans-pro/400-italic.css';
+@import 'npm:@fontsource/source-sans-pro/600-italic.css';
+@import 'npm:@fontsource/source-sans-pro/700-italic.css';
+@import 'npm:@fontsource/source-sans-pro/900-italic.css';
+@import 'npm:@fontsource/source-sans-pro/200.css';
+@import 'npm:@fontsource/source-sans-pro/300.css';
+@import 'npm:@fontsource/source-sans-pro/400.css';
+@import 'npm:@fontsource/source-sans-pro/600.css';
+@import 'npm:@fontsource/source-sans-pro/700.css';
+@import 'npm:@fontsource/source-sans-pro/900.css';
 
 @tailwind base;
 @tailwind components;
@@ -7,9 +19,10 @@
 
 @layer base {
     html {
-        @apply font-mono dark:bg-dark0 bg-l_base text-l_text dark:text-light0 text-sm leading-relaxed
+        @apply font-sans dark:bg-dark0 bg-l_base text-l_text dark:text-light0 leading-relaxed
     }
-    article {
+    p {
+        @apply mt-0.5
     }
     a {
         @apply dark:text-neutral_yellow hover:dark:text-bright_yellow visited:dark:text-faded_yellow text-l_blue hover:text-l_sky visited:text-l_lavender
@@ -36,13 +49,10 @@
     ol {
         @apply list-decimal pl-11
     }
-    p {
-      @apply pt-2
-    }
     hr {
       @apply my-2
     }
-    code { @apply text-l_text dark:text-light1 bg-l_surface0 dark:bg-dark1 p-0.5 }
+    code { @apply text-l_text font-mono text-sm dark:text-light1 bg-l_surface0 dark:bg-dark1 p-0.5 }
 }
     .chroma code { width: 0; height: 0; margin: 0; padding: 0; } /* Created by the code formatter, but i don't want it */
     /* Background */ .chroma { @apply text-l_text dark:text-light1 bg-l_crust dark:bg-dark0_soft px-2 py-2 my-2 overflow-x-auto max-w-full }

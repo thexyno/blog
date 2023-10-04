@@ -31,96 +31,31 @@ POSSIBILITY OF SUCH DAMAGE.
 package cmd
 
 import (
-	"io/ioutil"
-	"os"
-	"path"
-	"path/filepath"
-	"strings"
-	"time"
-
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/thexyno/xynoblog/db"
-	"github.com/thexyno/xynoblog/server"
-	"github.com/thexyno/xynoblog/util"
-	"gopkg.in/yaml.v3"
 )
 
-type mdheader struct {
-	Title   string    `yaml:"title"`
-	Id      string    `yaml:"id"`
-	Created time.Time `yaml:"created"`
-	Updated time.Time `yaml:"updated"`
-	Tags    []string  `yaml:"tags"`
-}
-
-// addCmd represents the add command
-var addCmd = &cobra.Command{
-	Use:   "add",
-	Short: "Add a post",
+// / publishCmd represents the publish command
+var publishCmd = &cobra.Command{
+	Use:   "publish",
+	Short: "Publishes posts (sets draft to false)",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		dbc := db.NewDb(viper.GetString(dbURIKey))
-		mediaDir := viper.GetString(mediaDirKey)
 		dbc.Seed()
 		for _, arg := range args {
-			filepath.Walk(arg, func(fpath string, info os.FileInfo, err error) error {
-				if !info.IsDir() && strings.HasSuffix(fpath, ".md") {
-					md, err := ioutil.ReadFile(fpath)
-					if err != nil {
-						log.Error(err)
-						return err
-					}
-					mdsplit := strings.Split(string(md), "---")
-					yml := mdsplit[1]
-					var header mdheader
-
-					err = yaml.Unmarshal([]byte(yml), &header)
-					if err != nil {
-						log.Error(err)
-						return err
-					}
-					mdRest := strings.Join(mdsplit[2:], "")
-					mdRest, err = util.AddMedia(mdRest, mediaDir, path.Dir(fpath))
-					if err != nil {
-						log.Error(err)
-						return err
-					}
-					server.RenderSimple([]byte(mdRest)) // Panics when md is broken
-
-					created := time.Now()
-					draft := true
-					post, err := dbc.Post(header.Id)
-					log.Infof("Post %#v", post)
-					if err == nil && post.Id != "" {
-						log.Infof("Post %s already exists", header.Id)
-						created = post.Created
-						draft = post.Draft
-					}
-
-					if err := dbc.Add(db.Post{
-						Title:   header.Title,
-						Id:      db.PostId(header.Id),
-						Content: mdRest,
-						Created: created,
-						Updated: time.Now(),
-						Tags:    header.Tags,
-						Draft:   draft,
-					}); err != nil {
-						log.Error(err)
-						return err
-					}
-				}
-				return nil
-			})
-
+			if err := dbc.Publish(arg); err != nil {
+				log.Error(err)
+			}
 		}
+
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(publishCmd)
 
 	// Here you will define your flags and configuration settings.
 

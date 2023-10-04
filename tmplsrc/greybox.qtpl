@@ -1,5 +1,5 @@
 {% func GreyBoxStart(props map[string]string) %}
-<div class="border-2 dark:text-light3 text-l_subtext1 dark:border-light3 border-l_surface2 px-5 py-2">
+<div class="border-2 mt-2 dark:text-light3 text-l_subtext1 dark:border-light3 border-l_surface2 px-5 py-2">
 {% endfunc %}
 
 {% func GreyBoxEnd(props map[string]string) %}

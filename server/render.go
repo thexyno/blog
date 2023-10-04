@@ -80,12 +80,16 @@ func renderHTMLBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus,
 	tkn := xhtml.NewTokenizer(bytes.NewReader(b))
 	tkn.Next()
 	token := tkn.Token()
+	attrs := make(map[string]string)
+	for _, attr := range token.Attr {
+		attrs[attr.Key] = attr.Val
+	}
 	for k, v := range components {
 		if strings.ToLower(token.Data) == strings.ToLower(k) {
 			if token.Type == xhtml.StartTagToken {
-				v.start(w, nil)
+				v.start(w, attrs)
 			} else {
-				v.end(w, nil)
+				v.end(w, attrs)
 			}
 			return ast.GoToNext, true
 		}

@@ -61,6 +61,30 @@ func renderPosts(db db.DbConn) func(*gin.Context) {
 		templates.WritePageTemplate(c.Writer, p)
 	}
 }
+func renderPostsWithTag(db db.DbConn) func(*gin.Context) {
+	return func(c *gin.Context) {
+		var tag struct {
+			Tag string `uri:"tag" binding:"required"`
+		}
+		if err := c.ShouldBindUri(&tag); err != nil {
+			renderError(c, err)
+			return
+		}
+		posts, err := db.ShortPostsByTag(tag.Tag, -1, 0)
+		if err != nil {
+			renderError(c, err)
+			return
+		}
+		if len(posts) > 0 {
+			c.Header("Last-Modified", maxTime(serverStart, posts[0].Created).Format(http.TimeFormat))
+		}
+		p := &templates.TagPage{
+			Posts:   posts,
+			TagName: tag.Tag,
+		}
+		templates.WritePageTemplate(c.Writer, p)
+	}
+}
 func renderIndex(db db.DbConn) func(*gin.Context) {
 	return func(c *gin.Context) {
 		posts, err := db.ShortPosts(5, 0)
@@ -137,6 +161,8 @@ func Mux(db db.DbConn, mediadir string) *gin.Engine {
 	r.GET("/sitemap.xml", renderSitemap(db))
 	r.GET("/post/:id", renderPost(db))
 	r.HEAD("/post/:id", renderPost(db))
+	r.GET("/tag/:tag", renderPostsWithTag(db))
+	r.HEAD("/tag/:tag", renderPostsWithTag(db))
 	impressumDEFile, err := statics.DataDir.Open("impressum.de.md")
 	if err != nil {
 		log.Panic(err)

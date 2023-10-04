@@ -1,0 +1,4 @@
+development:
+  dialect: sqlite3
+  datasource: blog.db
+  dir: db/migrations

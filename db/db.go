@@ -3,13 +3,16 @@ package db
 import (
 	"context"
 	"database/sql"
+	"embed"
 	_ "embed"
 	"errors"
 	"math"
+	"net/http"
 	"regexp"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
+	migrate "github.com/rubenv/sql-migrate"
 	log "github.com/sirupsen/logrus"
 	"github.com/thexyno/xynoblog/dbconn"
 )
@@ -35,12 +38,14 @@ type Post struct {
 	Updated    time.Time
 	Tags       []string
 	TimeToRead time.Duration
+	Draft      bool
 }
 type PostNoContent struct {
 	Id      PostId
 	Title   string
 	Created time.Time
 	Updated time.Time
+	Draft   bool
 }
 
 func (post *Post) ToIdUpdated() IdUpdated {
@@ -49,8 +54,8 @@ func (post *Post) ToIdUpdated() IdUpdated {
 
 var ErrNotFound error = errors.New("not found")
 
-//go:embed schema.sql
-var ddl string
+//go:embed migrations
+var ddl embed.FS
 
 func NewDb(uri string) DbConn {
 	log.Infof("dbpath is %v", uri)
@@ -66,10 +71,15 @@ func (conn *DbConn) Close() error {
 }
 
 func (conn *DbConn) Seed() error {
-	// create tables
-	if _, err := conn.db.ExecContext(conn.ctx, ddl); err != nil {
+	httpFs := http.FS(ddl)
+	migrationSource := &migrate.HttpFileSystemMigrationSource{
+		FileSystem: httpFs,
+	}
+	n, err := migrate.Exec(conn.db, "sqlite3", migrationSource, migrate.Up)
+	if err != nil {
 		return err
 	}
+	log.Infof("Applied %d migrations!", n)
 	return nil
 }
 
@@ -121,6 +131,7 @@ func (conn *DbConn) insertPost(post Post) error {
 			Content:   post.Content,
 			CreatedAt: post.Created,
 			UpdatedAt: post.Created,
+			Draft:     post.Draft,
 		},
 	)
 	if err != nil {
@@ -166,7 +177,7 @@ func wordCount(value string) int {
 	return len(results)
 }
 
-/// returns post  with id = id
+// / returns post  with id = id
 func (conn *DbConn) Post(id string) (Post, error) {
 	post, err := conn.queries.GetPost(conn.ctx, id)
 	if err != nil {
@@ -185,10 +196,11 @@ func (conn *DbConn) Post(id string) (Post, error) {
 		post.UpdatedAt,
 		tags,
 		duration,
+		post.Draft,
 	}, nil
 }
 
-/// returns post  with id = id
+// / returns posts limited by limit and offset order by updated desc
 func (conn *DbConn) Posts(limit int64, offset int64) ([]Post, error) {
 	posts, err := conn.queries.GetPosts(conn.ctx, dbconn.GetPostsParams{Limit: limit, Offset: offset})
 	if err != nil {
@@ -205,13 +217,37 @@ func (conn *DbConn) Posts(limit int64, offset int64) ([]Post, error) {
 				post.UpdatedAt,
 				[]string{},
 				0,
+				false,
 			}
+	}
+	return toReturn, nil
+}
+
+// / returns shortPosts with tag = tag
+func (conn *DbConn) ShortPostsByTag(tag string, limit, offset int64) ([]PostNoContent, error) {
+	posts, err := conn.queries.GetPostsByTagNoContent(conn.ctx, dbconn.GetPostsByTagNoContentParams{Tag: tag, Limit: limit, Offset: offset})
+	if err != nil {
+		return []PostNoContent{}, err
+	}
+	var toReturn = make([]PostNoContent, len(posts))
+	for i, post := range posts {
+		toReturn[i] = PostNoContent{
+			PostId(post.PostID),
+			post.Title,
+			post.CreatedAt,
+			post.UpdatedAt,
+			false,
+		}
 	}
 	return toReturn, nil
 }
 
 func (conn *DbConn) PostIds() ([]dbconn.GetPostIdsRow, error) {
 	return conn.queries.GetPostIds(conn.ctx)
+}
+
+func (conn *DbConn) Publish(id string) error {
+	return conn.queries.PublishPost(conn.ctx, id)
 }
 
 // returns posts with only textLength chars of post text and no duration
@@ -229,6 +265,7 @@ func (conn *DbConn) ShortPosts(limit int64, skip int64) ([]PostNoContent, error)
 			post.Title,
 			post.CreatedAt,
 			post.UpdatedAt,
+			false,
 		}
 	}
 	return toReturn, nil

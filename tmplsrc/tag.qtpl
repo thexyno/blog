@@ -1,0 +1,30 @@
+{% import (
+   "github.com/thexyno/xynoblog/db"
+   )
+%}
+
+{% code
+type TagPage struct {
+    Posts []db.PostNoContent
+    TagName string
+}
+%}
+
+
+{% func (p *TagPage) Title() %}{%s p.TagName %} - xynos space{% endfunc %}
+{% func (p *TagPage) Description() %}A Blog about Software Engineering, Hardware, NixOS, and more{% endfunc %}
+{% func (p *TagPage) Head() %}{% endfunc %}
+
+
+{% func (p *TagPage) Body() %}
+	<div class="mx-auto container max-w-6xl">
+	<h3 class="pt-4 text-xl font-semibold">Posts with tag "{%s p.TagName %}":</h3>
+      <div class="px-8 flex flex-col">
+      {% if len(p.Posts) == 0 %}
+	  	No posts.
+      {% else %}
+        {%= emitPosts(p.Posts) %}
+      {% endif %}
+	  </div>
+	</div>
+{% endfunc %}

@@ -1,5 +1,5 @@
 {% func BoxStart(props map[string]string) %}
-<div class="border-2 dark:text-light3 text-l_subtext1 border-l_red dark:border-bright_red px-5 py-2">
+<div class="border-2 mt-2 dark:text-light3 text-l_subtext1 border-l_red dark:border-bright_red px-5 py-2">
 {% endfunc %}
 
 {% func BoxEnd(props map[string]string) %}

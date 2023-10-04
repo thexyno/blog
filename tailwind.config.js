@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     fontFamily: {
       "mono": "'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco",
-      "sans": "ui-sans-serif, system-ui, Helvetica",
+      "sans": "'Source Sans Pro', ui-sans-serif, system-ui, Helvetica",
       "serif": "ui-serif, Georgia",
     },
     container: {

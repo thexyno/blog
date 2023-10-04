@@ -105,7 +105,7 @@
               inherit version;
               offlineCache = pkgs.fetchYarnDeps {
                 yarnLock = src + "/yarn.lock";
-                sha256 = "sha256-Qy2nAvr5aT5CH59/8NnyHuSJep2Tevf0i+h24Ejrc+o=";
+                sha256 = "sha256-KBPfBivLS72DnrS+d8D/8rEjPtqkkiH35o3BuNdZ/lI=";
                 #sha256 = pkgs.lib.fakeSha256;
               };
               src = ./.;
@@ -152,7 +152,7 @@
               # remeber to bump this hash when your dependencies change.
               #vendorSha256 = pkgs.lib.fakeSha256;
 
-              vendorSha256 = "sha256-fYdXR5ZhLma0QSgYkpeiHRymuC9fBx5y5mqsa8s8iMM=";
+              vendorSha256 = "sha256-PafmHjr0D69Pdp5FAwSC/2RtPBUAdbtDq7yEngteXNk=";
             };
         });
 
