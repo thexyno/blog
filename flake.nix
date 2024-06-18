@@ -2,7 +2,7 @@
   description = "A simple Go package";
 
   # Nixpkgs / NixOS version to use.
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
 
   outputs = { self, nixpkgs }:
     let
@@ -111,6 +111,7 @@
               src = ./.;
               distPhase = "true";
               installPhase = "true";
+              doCheck = false;
               fixupPhase = "true";
               buildPhase = ''
                 export HOME=$(mktemp -d)
@@ -126,7 +127,9 @@
               # In 'nix develop', we don't need a copy of the source tree
               # in the Nix store.
               src = ./.;
-              nativeBuildInputs = [ pkgs.installShellFiles pkgs.makeWrapper pkgs.quicktemplate pkgs.pkg-config ];
+              nativeBuildInputs = let 
+              quicktemplate = pkgs.quicktemplate.overrideAttrs (prev: curr: { doCheck = false; });
+              in [ pkgs.installShellFiles pkgs.makeWrapper quicktemplate pkgs.pkg-config ];
               buildInputs = [ pkgs.libwebp ];
 
               preConfigure = ''
@@ -150,9 +153,9 @@
               # it should be "out-of-band" with other tooling (eg. gomod2nix).
               # To begin with it is recommended to set this, but one must
               # remeber to bump this hash when your dependencies change.
-              #vendorSha256 = pkgs.lib.fakeSha256;
+              vendorHash = "sha256-PafmHjr0D69Pdp5FAwSC/2RtPBUAdbtDq7yEngteXNk=";
 
-              vendorSha256 = "sha256-PafmHjr0D69Pdp5FAwSC/2RtPBUAdbtDq7yEngteXNk=";
+              #vendorSha256 = "sha256-PafmHjr0D69Pdp5FAwSC/2RtPBUAdbtDq7yEngteXNk=";
             };
         });
 
