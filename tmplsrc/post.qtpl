@@ -26,7 +26,9 @@ type PostPage struct {
     },
     "datePublished": "{%j p.Post.Created.Format("2006-01-02") %}"
 }
-</script>{% endfunc %}
+</script>
+<meta name="fediverse:creator" content="@xyno@catgirl.cloud">
+{% endfunc %}
 {% endstripspace %}
 
 

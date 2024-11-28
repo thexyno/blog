@@ -2,7 +2,7 @@
   description = "A simple Go package";
 
   # Nixpkgs / NixOS version to use.
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
 
   outputs = { self, nixpkgs }:
     let
@@ -153,7 +153,7 @@
               # it should be "out-of-band" with other tooling (eg. gomod2nix).
               # To begin with it is recommended to set this, but one must
               # remeber to bump this hash when your dependencies change.
-              vendorHash = "sha256-PafmHjr0D69Pdp5FAwSC/2RtPBUAdbtDq7yEngteXNk=";
+              vendorHash = "sha256-dTXPJ43LGHWdgcAVoxkAOxIul8/NsztWFcNn3QWdVFE=";
 
               #vendorSha256 = "sha256-PafmHjr0D69Pdp5FAwSC/2RtPBUAdbtDq7yEngteXNk=";
             };
@@ -166,7 +166,7 @@
       devShell = forAllSystems (system:
         let pkgs = nixpkgsFor.${system}; in
         (pkgs.mkShell {
-          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go pkgs.lefthook pkgs.libwebp pkgs.yarn ];
+          buildInputs = [ pkgs.nixpkgs-fmt pkgs.gopls pkgs.go pkgs.lefthook pkgs.libwebp pkgs.sqlc pkgs.yarn (pkgs.quicktemplate.overrideAttrs (prev: curr: { doCheck = false; }))];
         }));
     };
 }
